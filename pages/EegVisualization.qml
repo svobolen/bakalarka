@@ -1,4 +1,3 @@
-
 import QtQuick 2.6
 import QtQuick.Layouts 1.3
 import QtQuick.Controls 2.0
@@ -8,24 +7,22 @@ Pane {
     id: pane
 
     SwipeView {
-        id: view
+        id: swipe
         currentIndex: 0
-        anchors.fill: parent
+        anchors {fill: parent; bottom: indicator.top}
 
         Pane {
             id: firstPage
-            width: view.width
-            height: view.height
+            width: swipe.width
+            height: swipe.height
 
             Label {
-                text: "Vyberte jedno nebo více schémat. Můžete nahrát i vlastní fotografie a obrázky."
-                font.pixelSize: 13
-                font.italic: true
-                anchors.margins: 5
-                anchors.bottom: grid.top
-                anchors.left: parent.left
-                anchors.right: parent.right
-                horizontalAlignment: Label.AlignHCenter
+                id: label
+                text: qsTr("Choose one or more images. You can upload your own photos or pictures.")
+                font {pixelSize: 13; italic: true}
+                width: parent.width
+                anchors {margins: 5; left: parent.left; right: parent.right}
+                horizontalAlignment: Qt.AlignHCenter
                 wrapMode: Label.Wrap
             }
 
@@ -35,13 +32,14 @@ Pane {
                 columnSpacing: 10
                 width: parent.width
                 height: parent.height
+                anchors.top: label.bottom
 
                 Repeater {
                     model:
                         ["qrc:/images/brains/brain1.png",
-                        "qrc:/images/brains/brain2.jpg",
                         "qrc:/images/brains/brain3.png",
-                        "qrc:/images/brains/brain4.png"]
+                        "qrc:/images/brains/brain4.png",
+                        "qrc:/images/brains/brain2.jpg"]
                     Image {
                         id: brain1
                         source: modelData
@@ -59,8 +57,8 @@ Pane {
         }
         Pane {
             id: secondPage
-            width: view.width
-            height: view.height
+            width: swipe.width
+            height: swipe.height
 
             Grid {
                 id: grid2
@@ -81,13 +79,14 @@ Pane {
 
                         FileDialog {
                             id: fileDialog
-                            title: "Please choose a file"
+                            title: qsTr("Please choose a file")
                             nameFilters: [ "Image files (*.jpg *.png)", "All files (*)" ]
                             folder: shortcuts.pictures
                             onAccepted: {
                                 brain2.source = fileDialog.fileUrl
                                 brain2.opacity = 1
                                 console.log("You chose: " + fileDialog.fileUrls)
+//                                grid2.addImage()
                             }
                             onRejected: {
                                 console.log("Canceled")
@@ -110,28 +109,36 @@ Pane {
                                 x: mouseArea.mouseX
                                 y: mouseArea.mouseY
                                 MenuItem {
-                                    text: "Change"
+                                    text: qsTr("Change")
                                     onClicked: fileDialog.open()
                                 }
                                 MenuItem {
-                                    text: "Delete"
+                                    text: qsTr("Delete")
                                     onClicked: {
                                         brain2.source = "qrc:/images/plus.png";
                                         brain2.opacity = 1;
+//                                        deleteImage()
                                     }
                                 }
                             }
                         }
                     }
                 }
+
+//                function addImage ()
+//                {
+//                    brain2.update()
+//                }
+
+//                function deleteImage()
+//                {
+
+//                }
             }
             Button {
                 id: okButton
-                text: "Potvrdit výběr"
-                anchors.margins: 10
-                anchors.bottomMargin: 50
-                anchors.bottom: parent.bottom
-                anchors.horizontalCenter: parent.horizontalCenter
+                text: qsTr("Confirm")
+                anchors {margins: 10; bottomMargin: 50; bottom: parent.bottom; horizontalCenter: parent.horizontalCenter}
 //            onClicked:
 
             }
@@ -140,9 +147,8 @@ Pane {
 
     PageIndicator {
         id: indicator
-        count: view.count
-        currentIndex: view.currentIndex
-        anchors.bottom: parent.bottom
-        anchors.horizontalCenter: parent.horizontalCenter
+        count: swipe.count
+        currentIndex: swipe.currentIndex
+        anchors {bottom: parent.bottom; horizontalCenter: parent.horizontalCenter}
     }
 }

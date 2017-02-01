@@ -11,13 +11,16 @@
         <file>images/menu@4x.png</file>
         <file>pages/EegVisualization.qml</file>
         <file>pages/Brains.qml</file>
-        <file>pages/Statistics.qml</file>
         <file>pages/LoadFile.qml</file>
-        <file>images/brain.png</file>
         <file>images/plus.png</file>
         <file>images/brains/brain2.jpg</file>
         <file>images/brains/brain1.png</file>
         <file>images/brains/brain3.png</file>
         <file>images/brains/brain4.png</file>
+        <file>pages/electrodes/DragItem.qml</file>
+        <file>pages/electrodes/DropItem.qml</file>
+        <file>images/Doctor_Hibbert.png</file>
+        <file>pages/electrodes/Item.qml</file>
+        <file>pages/ElectrodePlacement.qml</file>
     </qresource>
 </RCC>

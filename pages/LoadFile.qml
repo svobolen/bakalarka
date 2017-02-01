@@ -2,13 +2,13 @@ import QtQuick 2.0
 import QtQuick.Controls 2.0
 import QtQuick.Dialogs 1.0
 
-Item {
+Pane {
 
     Column {
 
         FileDialog {
             id: fileDialog
-            title: "Please choose a file"
+            title: qsTr("Please choose a file")
             nameFilters: [ "CSV files (*.csv)", "All files (*)" ]
             folder: shortcuts.home
             onAccepted: {
@@ -22,7 +22,7 @@ Item {
         }
         Button {
             id: openButton
-            text: "Open file"
+            text: qsTr("Open file")
             onClicked: fileDialog.open()
         }
     }

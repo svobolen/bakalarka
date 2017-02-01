@@ -87,7 +87,8 @@ ApplicationWindow {
                 ListElement { title: "Load file"; source: "qrc:/pages/LoadFile.qml" }
                 ListElement { title: "EEG visualization"; source: "qrc:/pages/EegVisualization.qml" }
                 ListElement { title: "Brains"; source: "qrc:/pages/Brains.qml" }
-                ListElement { title: "Statistics"; source: "qrc:/pages/Statistics.qml" }
+                ListElement { title: "Electrode Placement"; source: "qrc:/pages/ElectrodePlacement.qml" }
+                ListElement { title: "Drag and drop"; source: "qrc:/pages/electrodes/Item.qml" }
             }
             ScrollIndicator.vertical: ScrollIndicator { }
         }
@@ -100,6 +101,11 @@ ApplicationWindow {
         initialItem: Pane {
             id: pane
 
+            Image {
+                source: "qrc:/images/Doctor_Hibbert.png"
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.verticalCenter: parent.verticalCenter
+            }
         }
     }
 
