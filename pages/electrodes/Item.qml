@@ -16,7 +16,7 @@ Rectangle {
 
         Repeater {
             model: 81;
-            delegate: DropItem {}
+            delegate: DropVec {}
         }
     }
 
@@ -29,7 +29,7 @@ Rectangle {
         // tady budou elektrody
         Repeater {
             model: 12
-            delegate: DragItem {}
+            delegate: DragVec {}
         }
 
     }

@@ -17,10 +17,11 @@
         <file>images/brains/brain1.png</file>
         <file>images/brains/brain3.png</file>
         <file>images/brains/brain4.png</file>
-        <file>pages/electrodes/DragItem.qml</file>
-        <file>pages/electrodes/DropItem.qml</file>
         <file>images/Doctor_Hibbert.png</file>
         <file>pages/electrodes/Item.qml</file>
         <file>pages/ElectrodePlacement.qml</file>
+        <file>pages/DragItem.qml</file>
+        <file>pages/electrodes/DragVec.qml</file>
+        <file>pages/electrodes/DropVec.qml</file>
     </qresource>
 </RCC>
