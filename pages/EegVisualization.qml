@@ -59,13 +59,7 @@ Pane {
                 pinch.minimumScale: 1
                 pinch.maximumScale: 10
                 pinch.dragAxis: Pinch.XAndYAxis
-                onSmartZoom: {
-                    if (pinch.scale > 0) {
-                       firstPage.scale = pinch.scale
-                    } else {
-                        firstPage.scale = pinch.previousScale
-                    }
-                }
+                onSmartZoom: { firstPage.scale = pinch.scale }
                 onPinchFinished: {
                     firstPage.scale = 1
                     firstPage.x = 0
@@ -81,69 +75,17 @@ Pane {
             Grid {
                 id: grid2
                 columns: 2
-                columnSpacing: 10
+                spacing: 10
                 width: parent.width
                 height: parent.height
 
                 Repeater {
-                    model: 2
-
-                    Image {
-                        id: brain2
-                        source: "qrc:/images/plus.png"
-                        fillMode: Image.PreserveAspectFit
-                        width: parent.width/2
-                        height: parent.height/2
-
-                        FileDialog {
-                            id: fileDialog
-                            title: qsTr("Please choose a file")
-                            nameFilters: [ "Image files (*.jpg *.png)", "All files (*)" ]
-                            folder: shortcuts.pictures
-                            onAccepted: {
-                                brain2.source = fileDialog.fileUrl
-                                brain2.opacity = 1
-                                console.log("You chose: " + fileDialog.fileUrls)
-                            }
-                            onRejected: {
-                                console.log("Canceled")
-                            }
-                        }
-
-                        MouseArea {
-                            id: mouseArea
-                            anchors.fill: parent
-                            onClicked: {
-                                if (brain2.source == "qrc:/images/plus.png")
-                                    fileDialog.open()
-                                else
-                                    brain2.opacity = (brain2.opacity == 0.5) ? 1 : 0.5
-                            }
-
-                            onPressAndHold: menu.open()
-                            Menu {
-                                id: menu
-                                x: mouseArea.mouseX
-                                y: mouseArea.mouseY
-
-                                MenuItem {
-                                    text: qsTr("Change")
-                                    onClicked: fileDialog.open()
-                                }
-                                MenuItem {
-                                    text: qsTr("Delete")
-                                    onClicked: {
-                                        brain2.source = "qrc:/images/plus.png";
-                                        brain2.opacity = 1;
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    model: 1
+                    delegate: BrainTemplate { sourceImg: "qrc:/images/plus.png" }
                 }
             }
             Button {
-                id: okButton
+                id: confirmButton
                 text: qsTr("OK")
                 anchors {margins: 10; bottomMargin: 50; bottom: parent.bottom; horizontalCenter: parent.horizontalCenter}
                 //            onClicked:
@@ -154,13 +96,7 @@ Pane {
                 pinch.minimumScale: 1
                 pinch.maximumScale: 10
                 pinch.dragAxis: Pinch.XAndYAxis
-                onSmartZoom: {
-                    if (pinch.scale > 0) {
-                       secondPage.scale = pinch.scale
-                    } else {
-                        secondPage.scale = pinch.previousScale
-                    }
-                }
+                onSmartZoom: { secondPage.scale = pinch.scale }
                 onPinchFinished: {
                     secondPage.scale = 1
                     secondPage.x = swipe.width

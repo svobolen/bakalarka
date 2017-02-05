@@ -24,5 +24,6 @@
         <file>pages/electrodes/DragVec.qml</file>
         <file>pages/electrodes/DropVec.qml</file>
         <file>pages/ElectrodeManager.qml</file>
+        <file>pages/BrainTemplate.qml</file>
     </qresource>
 </RCC>
