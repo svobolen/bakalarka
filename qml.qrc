@@ -23,5 +23,6 @@
         <file>pages/DragItem.qml</file>
         <file>pages/electrodes/DragVec.qml</file>
         <file>pages/electrodes/DropVec.qml</file>
+        <file>pages/ElectrodeManager.qml</file>
     </qresource>
 </RCC>

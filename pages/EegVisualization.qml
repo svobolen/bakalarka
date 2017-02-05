@@ -25,7 +25,6 @@ Pane {
                 horizontalAlignment: Qt.AlignHCenter
                 wrapMode: Label.Wrap
             }
-
             Grid {
                 id: grid
                 columns: 2
@@ -54,6 +53,26 @@ Pane {
                     }
                 }
             }
+            PinchArea {
+                anchors.fill: parent
+                pinch.target: firstPage
+                pinch.minimumScale: 1
+                pinch.maximumScale: 10
+                pinch.dragAxis: Pinch.XAndYAxis
+                onSmartZoom: {
+                    if (pinch.scale > 0) {
+                       firstPage.scale = pinch.scale
+                    } else {
+                        firstPage.scale = pinch.previousScale
+                    }
+                }
+                onPinchFinished: {
+                    firstPage.scale = 1
+                    firstPage.x = 0
+                    firstPage.y = 0
+                }
+            }
+
         }
         Pane {
             id: secondPage
@@ -86,7 +105,6 @@ Pane {
                                 brain2.source = fileDialog.fileUrl
                                 brain2.opacity = 1
                                 console.log("You chose: " + fileDialog.fileUrls)
-//                                grid2.addImage()
                             }
                             onRejected: {
                                 console.log("Canceled")
@@ -108,6 +126,7 @@ Pane {
                                 id: menu
                                 x: mouseArea.mouseX
                                 y: mouseArea.mouseY
+
                                 MenuItem {
                                     text: qsTr("Change")
                                     onClicked: fileDialog.open()
@@ -117,30 +136,37 @@ Pane {
                                     onClicked: {
                                         brain2.source = "qrc:/images/plus.png";
                                         brain2.opacity = 1;
-//                                        deleteImage()
                                     }
                                 }
                             }
                         }
                     }
                 }
-
-//                function addImage ()
-//                {
-//                    brain2.update()
-//                }
-
-//                function deleteImage()
-//                {
-
-//                }
             }
             Button {
                 id: okButton
-                text: qsTr("Confirm")
+                text: qsTr("OK")
                 anchors {margins: 10; bottomMargin: 50; bottom: parent.bottom; horizontalCenter: parent.horizontalCenter}
-//            onClicked:
-
+                //            onClicked:
+            }
+            PinchArea {
+                anchors.fill: parent
+                pinch.target: secondPage
+                pinch.minimumScale: 1
+                pinch.maximumScale: 10
+                pinch.dragAxis: Pinch.XAndYAxis
+                onSmartZoom: {
+                    if (pinch.scale > 0) {
+                       secondPage.scale = pinch.scale
+                    } else {
+                        secondPage.scale = pinch.previousScale
+                    }
+                }
+                onPinchFinished: {
+                    secondPage.scale = 1
+                    secondPage.x = swipe.width
+                    secondPage.y = 0
+                }
             }
         }
     }

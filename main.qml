@@ -5,8 +5,8 @@ import QtQuick.Controls 2.0
 
 ApplicationWindow {
     id: window
-    width: 660
-    height: 1020
+    width: 1020
+    height: 660
     visible: true
     title: "My Application"
 
@@ -51,8 +51,12 @@ ApplicationWindow {
                     transformOrigin: Menu.TopRight
 
                     MenuItem {
-                        text: "About"
+                        text: qsTr("About")
                         onTriggered: aboutDialog.open()
+                    }
+                    MenuItem {
+                        text: qsTr("Exit")
+                        onTriggered: Qt.quit()
                     }
                 }
             }
@@ -88,6 +92,7 @@ ApplicationWindow {
                 ListElement { title: "EEG visualization"; source: "qrc:/pages/EegVisualization.qml" }
                 ListElement { title: "Brains"; source: "qrc:/pages/Brains.qml" }
                 ListElement { title: "Electrode Placement"; source: "qrc:/pages/ElectrodePlacement.qml" }
+                ListElement { title: "Electrode Manager"; source: "qrc:/pages/ElectrodeManager.qml" }
                 ListElement { title: "Drag and drop"; source: "qrc:/pages/electrodes/Item.qml" }
             }
             ScrollIndicator.vertical: ScrollIndicator { }
@@ -100,11 +105,24 @@ ApplicationWindow {
 
         initialItem: Pane {
             id: pane
-
             Image {
                 source: "qrc:/images/Doctor_Hibbert.png"
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.verticalCenter: parent.verticalCenter
+                anchors.centerIn: parent;
+            }
+            PinchArea {
+                anchors.fill: parent
+                pinch.target: pane
+                pinch.minimumScale: 1
+                pinch.maximumScale: 10
+                pinch.dragAxis: Pinch.XAndYAxis
+                onSmartZoom: pane.scale = pinch.scale
+                onPinchFinished: {
+                    pane.scale = 1
+                    pane.x = 0
+                    pane.y = 0
+                }
             }
         }
     }

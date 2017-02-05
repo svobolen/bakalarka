@@ -1,49 +1,57 @@
-import QtQuick 2.0
+import QtQuick 2.7
+import QtQuick.Layouts 1.3
+import QtQuick.Controls 1.4
+import QtQuick.Controls 2.0
 
-Item {
-
-//    Grid {
-//        id: destination
-
-//        anchors {left: parent.left; top: parent.top; margins: 5}
-//        width: parent.width
-//        height: parent.height
-//        opacity: 0.5
-//        columns: 9
-//        spacing: 5
-
-//        Repeater {
-//            model: 81;
-//            delegate: DropItem {}
-//        }
-//    }
-
+SplitView {
+    orientation: Qt.Horizontal
 
     DropArea {
-        width: parent.width
+        id: dropArea
+        width: 3/4*parent.width
         height: parent.height
+        Layout.minimumWidth: 100
 
         Image {
             id: brain
             source: "qrc:/images/brains/brain1.png"
             fillMode: Image.PreserveAspectFit
-            width: parent.width
+            width: parent.width - 10
             height: parent.height
         }
-    }
-
-    Column {
-        id: source
-        anchors {left: parent.left; top: parent.top; bottom: parent.bottom; margins: 5}
-        spacing: 5
-
-        // tady budou elektrody
-        Repeater {
-            model: 5
-            delegate: DragItem {}
+        PinchArea {
+            anchors.fill: parent
+            pinch.target: dropArea
+            pinch.minimumScale: 1
+            pinch.maximumScale: 10
+            pinch.dragAxis: Pinch.XAndYAxis
+            onSmartZoom: dropArea.scale = pinch.scale
+            onPinchFinished: {
+                dropArea.scale = 1
+                dropArea.x = 0
+                dropArea.y = 0
+            }
         }
     }
+
+    Item {
+        id: electrodeTab
+        height: parent.height
+        Column {
+            spacing: 10
+            padding: 5
+
+            Repeater {
+                model: 8
+                delegate: DragItem {columnCount: index + 4; rowCount:1}
+            }
+        }
+    }
+
+
 }
+
+
 
 
 
