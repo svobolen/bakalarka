@@ -72,7 +72,6 @@ Pane {
                     firstPage.y = 0
                 }
             }
-
         }
         Pane {
             id: secondPage
@@ -170,7 +169,6 @@ Pane {
             }
         }
     }
-
     PageIndicator {
         id: indicator
         count: swipe.count

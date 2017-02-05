@@ -21,6 +21,7 @@ Page {
             id: electrodeTab
             height: parent.height
             Column {
+                id: electrodeColumn
                 spacing: 10
                 padding: 5
 
@@ -29,23 +30,27 @@ Page {
                     delegate: DragItem {columnCount: index + 4; rowCount:1}
                 }
             }
+
         }
         Item {
             id: gridTab
             Flickable {
                 Column {
+                    id: gridColumn
                     spacing: 10
                     padding: 5
 
                     Repeater {
                         model: 8
-                        SpinBox { value: 50 }
                         delegate: DragItem {columnCount: index + 4; rowCount:10}
                     }
                 }
             }
         }
     }
+
+
+
 
     Button {
         id: addButton
@@ -60,7 +65,6 @@ Page {
         id: addDialog
         modal: true
         focus: true
-        //        x: (dropArea.width + page.width - width)/2 - dropArea.width
         x: (parent.width - width) / 2
         y: parent.height/6
 
@@ -77,7 +81,7 @@ Page {
                 id: rowSpinBox
                 from: 1
                 value: 1
-             }
+            }
             Label { text: qsTr("Columns") }
             SpinBox {
                 id: columnSpinBox
@@ -87,11 +91,50 @@ Page {
             Button {
                 id: okButton
                 text: qsTr("Add")
+                onClicked: {
+                    var elec
+                    var component = Qt.createComponent("qrc:/pages/DragItem.qml");
+                    var columnCount = columnSpinBox.value
+                    var rowCount = rowSpinBox.value
+                    if (columnCount === 1 && rowCount !== 1) {
+                        warningDialog.open()
+                    } else {if (rowCount === 1) {
+                            elec = component.createObject(electrodeColumn, {"columnCount": columnCount, "rowCount": rowCount});
+                            bar.currentIndex = 0
+                        } else {
+                            elec = component.createObject(gridColumn, {"columnCount": columnCount.value, "rowCount": rowCount});
+                            bar.currentIndex = 1
+                        }
+                        console.log("New electrode/grid " + rowCount + "x" + columnCount + " was added.")
+                        addDialog.close()
+                    }
+                }
             }
             Button {
                 id: closeButton
                 text: qsTr("Cancel")
                 onClicked: addDialog.close()
+            }
+        }
+    }
+    Popup {
+        id: warningDialog
+        modal: true
+        focus: true
+        x: (parent.width - width) / 2
+        y: parent.height/6
+        Column {
+            spacing: 10
+            Label { text: qsTr("<b>Warning</b>") }
+            Label {
+                horizontalAlignment: Qt.AlignHCenter
+                text: qsTr("Invalid input. Please switch numbers of rows and columns.")
+            }
+            Label { text: qsTr("For electrode: rows = 1.") }
+            Button {
+                anchors.horizontalCenter: parent.horizontalCenter
+                text: "OK"
+                onClicked: warningDialog.close()
             }
         }
     }
