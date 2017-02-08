@@ -4,6 +4,8 @@ import QtQuick.Controls 1.4
 import QtQuick.Controls 2.0
 
 SplitView {
+    property bool zoomEnabled: false
+
     orientation: Qt.Horizontal
 
     DropArea {
@@ -20,6 +22,7 @@ SplitView {
             height: parent.height
         }
         PinchArea {
+            enabled: zoomEnabled
             anchors.fill: parent
             pinch.target: dropArea
             pinch.minimumScale: 1
@@ -41,9 +44,17 @@ SplitView {
             spacing: 10
             padding: 5
 
+            Button {
+                text: qsTr("Export image")
+            }
+            Switch {
+                text: qsTr("Image zoom")
+                checked: false
+                onCheckedChanged: { zoomEnabled = checked ? true : false }
+            }
             Repeater {
                 model: 8
-                delegate: DragItem {columnCount: index + 4; rowCount:1}
+                Electrode {columnCount: index + 4; rowCount:1; draggable: true}
             }
         }
     }

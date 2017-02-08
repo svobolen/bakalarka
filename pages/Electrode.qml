@@ -1,19 +1,23 @@
 import QtQuick 2.6
+import QtQuick.Controls 2.0
 
 Item {
     id: root
     property int columnCount
     property int rowCount
     property int highestZ: 0            //posledni obrazek je nahore
-    width: columnCount*20; height: rowCount*20;
+    property bool draggable: false
+    readonly property int size: 20
+    property int currRow: 0
+    width: columnCount*size; height: rowCount*size;
 
     Flickable {
         id: flick
-//        anchors.fill: parent
+        //        anchors.fill: parent
 
         Rectangle {
             id: electrode
-            width: columnCount*20; height: rowCount*20; radius: 10
+            width: columnCount*size; height: rowCount*size; radius: 10
             opacity: 0.8
             border.color: "grey"
 
@@ -29,10 +33,10 @@ Item {
                             model: columnCount
                             Rectangle {
                                 opacity: 0.8
-                                width: 20; height: 20; radius: 10
+                                width: size; height: size; radius: 10
                                 border.color: "grey"
                                 Text {
-                                    text: modelData + 1
+                                    text: (rowCount === 1) ? (modelData + 1) : 0
                                     anchors.fill: parent
                                     horizontalAlignment:Text.AlignHCenter
                                     verticalAlignment: Text.AlignVCenter
@@ -41,13 +45,15 @@ Item {
                         }
                         Rectangle {
                             opacity: 0.8
-                            width: 25; height: 6; radius: 3
-                            y: 7
+                            width: size + 5; height: 6; radius: 3
+                            y: size / 2 - height / 2
                             border.color: "grey" }
                     }
                 }
             }
+
             PinchArea {
+                enabled: draggable
                 anchors.fill: parent
                 pinch.target: electrode
                 pinch.minimumRotation: -360
@@ -74,29 +80,51 @@ Item {
                     }
                 }
                 MouseArea {
+                    id: mouseArea
                     hoverEnabled: true
                     anchors.fill: parent
                     drag.target: electrode
                     scrollGestureEnabled: false  // 2-finger-flick gesture should pass through to the Flickable
-                    onPressed: {
-                        electrode.z = ++root.highestZ;
-                    }
+                    onPressAndHold: { menu.open() }
+                    onPressed: { electrode.z = ++root.highestZ }
                     onWheel: {
-                        if (wheel.modifiers & Qt.ControlModifier) {
-                            electrode.rotation += wheel.angleDelta.y / 120 * 5;
-                            if (Math.abs(electrode.rotation) < 4)
-                                electrode.rotation = 0;
-                        } else {
-                            electrode.rotation += wheel.angleDelta.x / 120;
-                            if (Math.abs(electrode.rotation) < 0.6)
-                                electrode.rotation = 0;
-                            var scaleBefore = electrode.scale;
-                            electrode.scale += electrode.scale * wheel.angleDelta.y / 120 / 10;
+                        if (draggable) {
+                            if (wheel.modifiers & Qt.ControlModifier) {
+                                electrode.rotation += wheel.angleDelta.y / 120 * 5;
+                                if (Math.abs(electrode.rotation) < 4)
+                                    electrode.rotation = 0;
+                            } else {
+                                electrode.rotation += wheel.angleDelta.x / 120;
+                                if (Math.abs(electrode.rotation) < 0.6)
+                                    electrode.rotation = 0;
+                                var scaleBefore = electrode.scale;
+                                electrode.scale += electrode.scale * wheel.angleDelta.y / 120 / 10;
+                            }
                         }
+                    }
+                }
+            }
+
+            Menu {
+                id: menu
+                x: mouseArea.mouseX
+                y: mouseArea.mouseY
+
+                MenuItem {
+                    text: qsTr("Fix position")
+                    onClicked: {
+                        draggable = false
+                        mouseArea.drag.target = null
+                    }
+                }
+                MenuItem {
+                    text: qsTr("Change position")
+                    onClicked: {
+                        draggable = true
+                        mouseArea.drag.target = electrode
                     }
                 }
             }
         }
     }
 }
-

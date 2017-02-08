@@ -90,7 +90,6 @@ ApplicationWindow {
             model: ListModel {
                 ListElement { title: "Load file"; source: "qrc:/pages/LoadFile.qml" }
                 ListElement { title: "EEG visualization"; source: "qrc:/pages/EegVisualization.qml" }
-                ListElement { title: "Brains"; source: "qrc:/pages/Brains.qml" }
                 ListElement { title: "Electrode Placement"; source: "qrc:/pages/ElectrodePlacement.qml" }
                 ListElement { title: "Electrode Manager"; source: "qrc:/pages/ElectrodeManager.qml" }
                 ListElement { title: "Drag and drop"; source: "qrc:/pages/electrodes/Item.qml" }

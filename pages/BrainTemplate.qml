@@ -18,10 +18,12 @@ Image {
         nameFilters: [ "Image files (*.jpg *.png)", "All files (*)" ]
         folder: shortcuts.pictures
         onAccepted: {
+            if (brainImage.source == "qrc:/images/plus.png") {
+                var component = Qt.createComponent("qrc:/pages/BrainTemplate.qml");
+                var elec = component.createObject(parent, {sourceImg: "qrc:/images/plus.png"});
+            }
             brainImage.source = fileDialog.fileUrl
             brainImage.opacity = 1
-            var component = Qt.createComponent("qrc:/pages/BrainTemplate.qml");
-            var elec = component.createObject(parent, {sourceImg: "qrc:/images/plus.png"});
             console.log("You chose: " + fileDialog.fileUrls)
         }
         onRejected: {
@@ -52,10 +54,8 @@ Image {
             MenuItem {
                 text: qsTr("Delete")
                 onClicked: {
-                    console.log("Component destroyed.")
-                    brainImage.destroy()
-                    //                    brainImage.source = "qrc:/images/plus.png";
-                    //                    brainImage.opacity = 1;
+                    brainImage.source = "qrc:/images/plus.png";
+                    brainImage.opacity = 1;
                 }
             }
         }

@@ -10,7 +10,6 @@
         <file>images/menu@3x.png</file>
         <file>images/menu@4x.png</file>
         <file>pages/EegVisualization.qml</file>
-        <file>pages/Brains.qml</file>
         <file>pages/LoadFile.qml</file>
         <file>images/plus.png</file>
         <file>images/brains/brain2.jpg</file>
@@ -20,10 +19,10 @@
         <file>images/Doctor_Hibbert.png</file>
         <file>pages/electrodes/Item.qml</file>
         <file>pages/ElectrodePlacement.qml</file>
-        <file>pages/DragItem.qml</file>
         <file>pages/electrodes/DragVec.qml</file>
         <file>pages/electrodes/DropVec.qml</file>
         <file>pages/ElectrodeManager.qml</file>
         <file>pages/BrainTemplate.qml</file>
+        <file>pages/Electrode.qml</file>
     </qresource>
 </RCC>

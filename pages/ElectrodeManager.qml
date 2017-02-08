@@ -1,6 +1,7 @@
 import QtQuick 2.7
 import QtQuick.Layouts 1.3
 import QtQuick.Controls 2.0
+import QtQuick.Controls.Styles 1.4
 
 Page {
     id: item
@@ -8,7 +9,7 @@ Page {
     footer: TabBar {
         id: bar
         width: parent.width
-        TabButton { text: qsTr("Electrodes") }
+        TabButton { text: qsTr("Strips") }
         TabButton { text: qsTr("Grids") }
     }
 
@@ -17,44 +18,56 @@ Page {
         width: parent.width
         height: parent.height
         currentIndex: bar.currentIndex
-        Item {
-            id: electrodeTab
-            height: parent.height
-            Column {
-                id: electrodeColumn
-                spacing: 10
-                padding: 5
+        Flickable {
+            contentHeight: stripTab.height
+            contentWidth: stripTab.width
+            Item {
+                id: stripTab
+                width: stripColumn.width * 1.1
+                height: stripColumn.height * 1.1
+                Column {
+                    id: stripColumn
+                    spacing: 10
+                    padding: 5
 
-                Repeater {
-                    model: 8
-                    delegate: DragItem {columnCount: index + 4; rowCount:1}
+                    Repeater {
+                        model: 8
+                        delegate: Electrode {columnCount: index + 4; rowCount:1}
+                    }
                 }
             }
-
+            ScrollIndicator.vertical: ScrollIndicator { }
+            ScrollIndicator.horizontal: ScrollIndicator { }
         }
-        Item {
-            id: gridTab
-            Flickable {
+
+        Flickable {
+            contentHeight: gridTab.height
+            contentWidth: gridTab.width
+
+            Item {
+                id: gridTab
+                width: gridColumn.width * 1.1
+                height: gridColumn.height * 1.1
+
                 Column {
                     id: gridColumn
                     spacing: 10
                     padding: 5
 
                     Repeater {
-                        model: 8
-                        delegate: DragItem {columnCount: index + 4; rowCount:10}
+                        model: 2
+                        delegate: Electrode {columnCount: index + 4; rowCount:10}
                     }
                 }
             }
+            ScrollIndicator.vertical: ScrollIndicator { }
+            ScrollIndicator.horizontal: ScrollIndicator { }
         }
     }
 
-
-
-
     Button {
         id: addButton
-        text: "Add new type of electrode or grid"
+        text: "Add new type of strip or grid"
         x: (parent.width - width) / 2
         anchors.bottom: parent.bottom
         anchors.bottomMargin: 15
@@ -74,9 +87,9 @@ Page {
             spacing: 10
             verticalItemAlignment: Grid.AlignVCenter
 
-            Label { text: qsTr("<b>Add new electrode/grid</b>") }
+            Label { text: qsTr("<b>Add new strip/grid</b>") }
             Label { text: " " }
-            Label { text: qsTr("Rows (for electrode rows = 1)") }
+            Label { text: qsTr("Rows") }
             SpinBox {
                 id: rowSpinBox
                 from: 1
@@ -88,26 +101,38 @@ Page {
                 from: 1
                 value: 5
             }
+
+            CheckBox {
+                id: checkBox
+                text: qsTr("set different indexing")
+            }
+            Label { text: " " }
+
             Button {
                 id: okButton
                 text: qsTr("Add")
                 onClicked: {
+                    if (checkBox.checked) { indexingDialog.open() }
                     var elec
-                    var component = Qt.createComponent("qrc:/pages/DragItem.qml");
+                    var component = Qt.createComponent("qrc:/pages/Electrode.qml");
                     var columnCount = columnSpinBox.value
                     var rowCount = rowSpinBox.value
+
+                    //for strips rows = 1
                     if (columnCount === 1 && rowCount !== 1) {
-                        warningDialog.open()
-                    } else {if (rowCount === 1) {
-                            elec = component.createObject(electrodeColumn, {"columnCount": columnCount, "rowCount": rowCount});
-                            bar.currentIndex = 0
-                        } else {
-                            elec = component.createObject(gridColumn, {"columnCount": columnCount.value, "rowCount": rowCount});
-                            bar.currentIndex = 1
-                        }
-                        console.log("New electrode/grid " + rowCount + "x" + columnCount + " was added.")
-                        addDialog.close()
+                        columnCount = rowCount
+                        rowCount = 1
                     }
+                    if (rowCount === 1) {
+                        elec = component.createObject(stripColumn, {"columnCount": columnCount, "rowCount": rowCount});
+                        bar.currentIndex = 0
+                    } else {
+                        elec = component.createObject(gridColumn, {"columnCount": columnCount, "rowCount": rowCount});
+                        bar.currentIndex = 1
+                    }
+                    console.log("New electrode " + rowCount + "x" + columnCount + " was added.")
+                    addDialog.close()
+
                 }
             }
             Button {
@@ -117,25 +142,43 @@ Page {
             }
         }
     }
-    Popup {
-        id: warningDialog
-        modal: true
-        focus: true
-        x: (parent.width - width) / 2
-        y: parent.height/6
-        Column {
-            spacing: 10
-            Label { text: qsTr("<b>Warning</b>") }
-            Label {
-                horizontalAlignment: Qt.AlignHCenter
-                text: qsTr("Invalid input. Please switch numbers of rows and columns.")
-            }
-            Label { text: qsTr("For electrode: rows = 1.") }
-            Button {
-                anchors.horizontalCenter: parent.horizontalCenter
-                text: "OK"
-                onClicked: warningDialog.close()
-            }
-        }
-    }
+
+    //    Popup {
+    //        id: indexingDialog
+    //        property var indexing: []
+    //        modal: true
+    //        focus: true
+    //        x: (parent.width - width) / 2
+    //        y: parent.height/6
+    //        Column {
+    //            spacing: 10
+    //            Label { text: qsTr("<b>Indexing</b>") }
+    //            Grid {
+    //                id: gridPopup
+    //                columns: columnSpinBox.value
+    //                rows: rowSpinBox.value
+    //                Repeater {
+    //                    id: rep
+    //                    model: gridPopup.columns * gridPopup.rows
+    //                    TextField {
+    //                        id: textfield
+    //                        placeholderText: qsTr("0")
+    //                        background: Rectangle {
+    //                            width: 20; height: 20; radius: 10
+    //                            border.color: "black"
+    //                        }
+    //                    }
+    //                }
+    //            }
+
+    //            Button {
+    //                anchors.horizontalCenter: parent.horizontalCenter
+    //                text: "OK"
+    //                onClicked: {
+
+    //                    indexingDialog.close()
+    //                }
+    //            }
+    //        }
+    //    }
 }
