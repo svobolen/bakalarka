@@ -28,11 +28,29 @@ Page {
                 Column {
                     id: stripColumn
                     spacing: 10
-                    padding: 5
+                    padding: 10
 
                     Repeater {
                         model: 8
-                        delegate: Electrode {columnCount: index + 4; rowCount:1}
+                        Row {
+                            spacing: 10
+                            SpinBox {
+                                value: 0
+                                anchors.verticalCenter: parent.verticalCenter
+                            }
+                            Label {
+                                text: strip.rowCount + "x" + strip.columnCount
+                                font.pixelSize: 12
+                                anchors.verticalCenter: parent.verticalCenter
+                            }
+                            Electrode {
+                                id: strip
+                                columnCount: index + 4
+                                rowCount: 1
+                                flickable: false
+                                anchors.verticalCenter: parent.verticalCenter
+                            }
+                        }
                     }
                 }
             }
@@ -52,11 +70,29 @@ Page {
                 Column {
                     id: gridColumn
                     spacing: 10
-                    padding: 5
+                    padding: 10
 
                     Repeater {
                         model: 2
-                        delegate: Electrode {columnCount: index + 4; rowCount:10}
+                        Row {
+                            spacing: 10
+                            SpinBox {
+                                value: 0
+                                anchors.verticalCenter: parent.verticalCenter
+                            }
+                            Label {
+                                text: grid.rowCount + "x" + grid.columnCount
+                                font.pixelSize: 12
+                                anchors.verticalCenter: parent.verticalCenter
+                            }
+                            Electrode {
+                                id: grid
+                                columnCount: index + 4
+                                rowCount: 5
+                                flickable: false
+                                anchors.verticalCenter: parent.verticalCenter
+                            }
+                        }
                     }
                 }
             }
@@ -82,7 +118,6 @@ Page {
         y: parent.height/6
 
         Grid {
-            id: grid
             columns: 2
             spacing: 10
             verticalItemAlignment: Grid.AlignVCenter
@@ -101,19 +136,17 @@ Page {
                 from: 1
                 value: 5
             }
-
             CheckBox {
                 id: checkBox
                 text: qsTr("set different indexing")
             }
             Label { text: " " }
-
             Button {
                 id: okButton
                 text: qsTr("Add")
                 onClicked: {
                     if (checkBox.checked) { indexingDialog.open() }
-                    var elec
+                    var newElectrode
                     var component = Qt.createComponent("qrc:/pages/Electrode.qml");
                     var columnCount = columnSpinBox.value
                     var rowCount = rowSpinBox.value
@@ -124,10 +157,10 @@ Page {
                         rowCount = 1
                     }
                     if (rowCount === 1) {
-                        elec = component.createObject(stripColumn, {"columnCount": columnCount, "rowCount": rowCount});
+                        newElectrode = component.createObject(stripColumn, {"columnCount": columnCount, "rowCount": rowCount, "flickable": false});
                         bar.currentIndex = 0
                     } else {
-                        elec = component.createObject(gridColumn, {"columnCount": columnCount, "rowCount": rowCount});
+                        newElectrode = component.createObject(gridColumn, {"columnCount": columnCount, "rowCount": rowCount, "flickable": false});
                         bar.currentIndex = 1
                     }
                     console.log("New electrode " + rowCount + "x" + columnCount + " was added.")

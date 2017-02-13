@@ -7,13 +7,14 @@ Item {
     property int rowCount
     property int highestZ: 0            //posledni obrazek je nahore
     property bool draggable: false
+    property bool flickable: true
     readonly property int size: 20
     property int currRow: 0
     width: columnCount*size; height: rowCount*size;
 
     Flickable {
         id: flick
-        //        anchors.fill: parent
+        enabled: flickable
 
         Rectangle {
             id: electrode

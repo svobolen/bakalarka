@@ -67,6 +67,11 @@ Pane {
                 }
             }
         }
+    }
+    Component.onCompleted: swipe.addItem(newPage.createObject(swipe))
+
+    Component {
+        id: newPage
         Pane {
             id: secondPage
             width: swipe.width
@@ -81,7 +86,31 @@ Pane {
 
                 Repeater {
                     model: 1
-                    delegate: BrainTemplate { sourceImg: "qrc:/images/plus.png" }
+                    BrainTemplate {
+                        sourceImg: "qrc:/images/plus.png"
+                        MouseArea {
+                            id: mouseArea
+                            anchors.fill: parent
+                            onPressAndHold: menu.open()
+                            Menu {
+                                id: menu
+                                x: mouseArea.mouseX
+                                y: mouseArea.mouseY
+
+                                MenuItem {
+                                    text: qsTr("Change")
+                                    onClicked: console.log("ahoj")
+                                }
+                                MenuItem {
+                                    text: qsTr("Delete")
+                                    onClicked: {
+                                        brainImage.source = "qrc:/images/plus.png";
+                                        brainImage.opacity = 1;
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
             Button {
@@ -103,8 +132,21 @@ Pane {
                     secondPage.y = 0
                 }
             }
+            Button {
+                id: addButton
+                text: "new page"
+                rotation: -90
+                anchors.right: parent.right
+                anchors.verticalCenter: parent.verticalCenter
+                onClicked: {
+                    swipe.addItem(newPage.createObject(swipe))
+                    swipe.currentIndex++
+                }
+            }
         }
     }
+
+
     PageIndicator {
         id: indicator
         count: swipe.count
