@@ -65,8 +65,8 @@ SplitView {
                     focus: true
                     modal: true
                     closePolicy: Popup.NoAutoClose
-                    x: (electrodeTab.width + dropArea.width - width)/2 - dropArea.width
-                    y: electrodeTab.height/6
+                    x: (window.width - width)/2 - dropArea.width
+                    y: window.height/6
                     Column {
                         spacing: 10
                         Label { text: qsTr("<b>Confirm</b>") }
@@ -90,21 +90,10 @@ SplitView {
                     }
 
                 }
-                Popup {
+                InfoPopup {
                     id: info
-                    modal: true
-                    focus: true
-                    x: (electrodeTab.width + dropArea.width - width)/2 - dropArea.width
-                    y: electrodeTab.height/6
-                    Column {
-                        spacing: 10
-                        Label { text: qsTr("<b>Information</b>") }
-                        Label { text: qsTr("Positions of electrodes are fixed.") }
-                        Button {
-                            text: qsTr("OK")
-                            onClicked: info.close()
-                        }
-                    }
+                    msg: "Positions of electrodes are fixed."
+                    x: (window.width - width)/2 - dropArea.width
                 }
             }
             Switch {

@@ -34,6 +34,7 @@ Pane {
                 anchors.top: label.bottom
 
                 Repeater {
+                    id: rep
                     model:
                         ["qrc:/images/brains/brain1.png",
                         "qrc:/images/brains/brain3.png",
@@ -43,7 +44,8 @@ Pane {
                     BrainTemplate {
                         id: brain
                         sourceImg: modelData
-                        checkboxVisible: true }
+                        checkboxVisible: true
+                    }
                 }
             }
             PinchArea {
@@ -60,8 +62,8 @@ Pane {
                 }
             }
         }
+        Component.onCompleted: swipe.addItem(newPage.createObject(swipe))
     }
-    Component.onCompleted: swipe.addItem(newPage.createObject(swipe))
 
     Component {
         id: newPage
@@ -78,6 +80,7 @@ Pane {
                 height: parent.height
 
                 Repeater {
+                    id: rep
                     model: 1
                     BrainTemplate { sourceImg: "qrc:/images/plus.png" }
                 }
@@ -86,7 +89,15 @@ Pane {
                 id: confirmButton
                 text: qsTr("OK")
                 anchors {margins: 10; bottomMargin: 50; bottom: parent.bottom; horizontalCenter: parent.horizontalCenter}
-                //            onClicked:
+                onClicked: {
+                    countChecked()
+                    console.log("User chose " + countChecked() + " image(s).")
+                    info.open()
+                }
+            }
+            InfoPopup {
+                id: info
+                msg: "You chose " + countChecked() + " image(s)."
             }
             PinchArea {
                 anchors.fill: parent
@@ -115,11 +126,23 @@ Pane {
         }
     }
 
-
     PageIndicator {
         id: indicator
         count: swipe.count
         currentIndex: swipe.currentIndex
         anchors {bottom: parent.bottom; horizontalCenter: parent.horizontalCenter}
+    }
+
+    function countChecked() {
+        var checkedCount = 0
+        for (var i = 0; i < swipe.count; i++) {
+            for (var j = 0; j < rep.count; j++) {
+                console.log(rep.itemAt(j).imgChecked)
+                if(rep.itemAt(j).imgChecked) {
+                    checkedCount++
+                }
+            }
+        }
+        return checkedCount
     }
 }
