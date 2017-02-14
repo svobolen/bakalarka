@@ -5,6 +5,7 @@ import QtQuick.Dialogs 1.2
 Image {
 
     property string sourceImg
+    property bool checkboxVisible: false
 
     id: brainImage
     source: sourceImg
@@ -23,7 +24,8 @@ Image {
                 var elec = component.createObject(parent, {sourceImg: "qrc:/images/plus.png"});
             }
             brainImage.source = fileDialog.fileUrl
-            brainImage.opacity = 1
+            checkbox.visible = true
+            checkbox.checked = false
             console.log("You chose: " + fileDialog.fileUrls)
         }
         onRejected: {
@@ -38,7 +40,7 @@ Image {
             if (brainImage.source == "qrc:/images/plus.png")
                 fileDialog.open()
             else
-                brainImage.opacity = (brainImage.opacity == 0.5) ? 1 : 0.5
+                checkbox.checked = (checkbox.checked) ? false : true
         }
 
         onPressAndHold: menu.open()
@@ -55,9 +57,36 @@ Image {
                 text: qsTr("Delete")
                 onClicked: {
                     brainImage.source = "qrc:/images/plus.png";
-                    brainImage.opacity = 1;
+                    checkbox.visible = false
+                    checkbox.checked = false
                 }
             }
         }
+    }
+
+    CheckBox {
+        visible: checkboxVisible
+        id: checkbox
+        anchors.fill: parent
+        indicator: Rectangle {
+            implicitWidth: 26
+            implicitHeight: 26
+            x: checkbox.x + checkbox.width - 2*width
+            y: checkbox.y + checkbox.height - 2*height
+            radius: 3
+            border.color: "black"
+
+            Rectangle {
+                width: 14
+                height: 14
+                x: 6
+                y: 6
+                radius: 2
+                color: checkbox.checked ? "green" : "black"
+                visible: checkbox.checked
+            }
+        }
+        onCheckStateChanged: brainImage.opacity = checkbox.checked ? 0.5 : 1
+        onPressAndHold: menu.open()
     }
 }

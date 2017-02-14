@@ -39,18 +39,11 @@ Pane {
                         "qrc:/images/brains/brain3.png",
                         "qrc:/images/brains/brain4.png",
                         "qrc:/images/brains/brain2.jpg"]
-                    Image {
-                        id: brain1
-                        source: modelData
-                        fillMode: Image.PreserveAspectFit
-                        width: parent.width/2
-                        height: parent.height/2
 
-                        MouseArea {
-                            anchors.fill: parent
-                            onClicked: brain1.opacity = (brain1.opacity == 0.5) ? 1 : 0.5
-                        }
-                    }
+                    BrainTemplate {
+                        id: brain
+                        sourceImg: modelData
+                        checkboxVisible: true }
                 }
             }
             PinchArea {
@@ -86,31 +79,7 @@ Pane {
 
                 Repeater {
                     model: 1
-                    BrainTemplate {
-                        sourceImg: "qrc:/images/plus.png"
-                        MouseArea {
-                            id: mouseArea
-                            anchors.fill: parent
-                            onPressAndHold: menu.open()
-                            Menu {
-                                id: menu
-                                x: mouseArea.mouseX
-                                y: mouseArea.mouseY
-
-                                MenuItem {
-                                    text: qsTr("Change")
-                                    onClicked: console.log("ahoj")
-                                }
-                                MenuItem {
-                                    text: qsTr("Delete")
-                                    onClicked: {
-                                        brainImage.source = "qrc:/images/plus.png";
-                                        brainImage.opacity = 1;
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    BrainTemplate { sourceImg: "qrc:/images/plus.png" }
                 }
             }
             Button {
