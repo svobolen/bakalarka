@@ -136,16 +136,16 @@ Page {
                 from: 1
                 value: 5
             }
-            CheckBox {
-                id: checkBox
-                text: qsTr("set different indexing")
-            }
-            Label { text: " " }
+//            CheckBox {
+//                id: checkBox
+//                text: qsTr("set different indexing")
+//            }
+//            Label { text: " " }
             Button {
                 id: okButton
                 text: qsTr("Add")
                 onClicked: {
-                    if (checkBox.checked) { indexingDialog.open() }
+//                    if (checkBox.checked) { indexingDialog.open() }
                     var newElectrode
                     var component = Qt.createComponent("qrc:/pages/Electrode.qml");
                     var columnCount = columnSpinBox.value

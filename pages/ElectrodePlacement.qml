@@ -5,33 +5,41 @@ import QtQuick.Controls 2.0
 
 SplitView {
     property bool zoomEnabled: false
+    property var images: []
     orientation: Qt.Horizontal
 
-    DropArea {
-        id: dropArea
+    Item {
+        id: imageArea
         width: 3/4*parent.width
         height: parent.height
         Layout.minimumWidth: 100
 
-        Image {
-            id: brain
-            source: "qrc:/images/brains/brain1.png"
-            fillMode: Image.PreserveAspectFit
-            width: parent.width - 10
-            height: parent.height
+        Grid {
+            id: imagesGrid
+            rows: Math.round(images.length/2)
+            Repeater {
+                model: images
+                Image {
+                    source: modelData
+                    fillMode: Image.PreserveAspectFit
+                    width: (imagesGrid.rows == 1 && images.length !== 1) ? imageArea.width/(imagesGrid.rows+1) : imageArea.width/imagesGrid.rows
+                    height: imageArea.height/imagesGrid.rows
+                }
+            }
         }
+
         PinchArea {
             enabled: zoomEnabled
             anchors.fill: parent
-            pinch.target: dropArea
+            pinch.target: imageArea
             pinch.minimumScale: 1
             pinch.maximumScale: 10
             pinch.dragAxis: Pinch.XAndYAxis
-            onSmartZoom: dropArea.scale = pinch.scale
+            onSmartZoom: imageArea.scale = pinch.scale
             onPinchFinished: {
-                dropArea.scale = 1
-                dropArea.x = 0
-                dropArea.y = 0
+                imageArea.scale = 1
+                imageArea.x = 0
+                imageArea.y = 0
             }
         }
     }
@@ -65,7 +73,7 @@ SplitView {
                     focus: true
                     modal: true
                     closePolicy: Popup.NoAutoClose
-                    x: (window.width - width)/2 - dropArea.width
+                    x: (window.width - width)/2 - imageArea.width
                     y: window.height/6
                     Column {
                         spacing: 10
@@ -93,7 +101,7 @@ SplitView {
                 InfoPopup {
                     id: info
                     msg: "Positions of electrodes are fixed."
-                    x: (window.width - width)/2 - dropArea.width
+                    x: (window.width - width)/2 - imageArea.width
                 }
             }
             Switch {

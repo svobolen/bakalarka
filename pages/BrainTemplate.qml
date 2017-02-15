@@ -6,7 +6,7 @@ Image {
 
     property string sourceImg
     property bool checkboxVisible: false
-    property bool imgChecked
+    property alias imgChecked: checkbox.checked
     readonly property string plusImgSource: "qrc:/images/plus.png"
 
 
@@ -39,7 +39,6 @@ Image {
             var fileExtension = source.substring(source.length-4,source.length)
             return ( (fileExtension === (".jpg")) || (fileExtension === ".png") )
         }
-
         function addImage(source) {
             //add new plus image when you add new image
             if (brainImage.source == plusImgSource) {
@@ -61,10 +60,11 @@ Image {
         id: mouseArea
         anchors.fill: parent
         onClicked: {
-            if (brainImage.source == plusImgSource)
+            if (brainImage.source == plusImgSource) {
                 fileDialog.open()
-            else
+            } else {
                 checkbox.checked = (checkbox.checked) ? false : true
+            }
         }
 
         onPressAndHold: menu.open()
@@ -111,7 +111,6 @@ Image {
             }
         }
         onCheckStateChanged: {
-            imgChecked = checkbox.checked
             brainImage.opacity = checkbox.checked ? 0.5 : 1
         }
         onPressAndHold: menu.open()

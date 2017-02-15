@@ -90,14 +90,20 @@ Pane {
                 text: qsTr("OK")
                 anchors {margins: 10; bottomMargin: 50; bottom: parent.bottom; horizontalCenter: parent.horizontalCenter}
                 onClicked: {
+                    //                    loader.sourceComponent = funcCaller
                     countChecked()
-                    console.log("User chose " + countChecked() + " image(s).")
                     info.open()
+                    console.log("User chose " + countChecked().length + " image(s): " + countChecked().toString())
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                    titleLabel.text = "Electrode placement"
+                    stackView.replace( "qrc:/pages/ElectrodePlacement.qml", {"images": countChecked()} )
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
                 }
             }
             InfoPopup {
                 id: info
-                msg: "You chose " + countChecked() + " image(s)."
+                msg: "You chose " + countChecked().length + " image(s)."
             }
             PinchArea {
                 anchors.fill: parent
@@ -114,15 +120,38 @@ Pane {
             }
             Button {
                 id: addButton
-                text: "new page"
-                rotation: -90
+                text: "+"
+                font.pixelSize: 21
+                width: height
                 anchors.right: parent.right
                 anchors.verticalCenter: parent.verticalCenter
                 onClicked: {
                     swipe.addItem(newPage.createObject(swipe))
                     swipe.currentIndex++
+                    console.log("Page " + swipe.currentIndex + " was added to swipe. (Counting from zero.)")
+
                 }
             }
+            Button {
+                id: deleteButton
+                text: "-"
+                font.pixelSize: 21
+                width: height
+                anchors.left: parent.left
+                anchors.verticalCenter: parent.verticalCenter
+                onClicked: {
+                    if(swipe.count !== 2) {
+                        console.log("Page " + swipe.currentIndex + " was removed from swipe. (Counting from zero.)")
+                        swipe.removeItem(swipe.currentIndex)
+                    } else {
+                        console.log("There have to be at least 2 pages in swipe.")
+                    }
+
+                }
+            }
+//            Loader {
+//                id: loader
+//            }
         }
     }
 
@@ -133,16 +162,25 @@ Pane {
         anchors {bottom: parent.bottom; horizontalCenter: parent.horizontalCenter}
     }
 
+    //    Component {
+    //        id: funcCaller
+    //        Rectangle { Component.onCompleted: countChecked() }
+    //    }
+
     function countChecked() {
+        // upravit abych to fungovalo na vsechny stranky !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         var checkedCount = 0
-        for (var i = 0; i < swipe.count; i++) {
-            for (var j = 0; j < rep.count; j++) {
-                console.log(rep.itemAt(j).imgChecked)
-                if(rep.itemAt(j).imgChecked) {
-                    checkedCount++
-                }
+        var sourceArray = []
+        console.log(" ")
+        //        for (var k = 0; k < swipe.count; k++) {
+        for (var i = 0; i < rep.count; i++) {
+            console.log(rep.itemAt(i).imgChecked)
+            if (rep.itemAt(i).imgChecked) {
+                checkedCount++
+                sourceArray.push(rep.itemAt(i).sourceImg)
             }
         }
-        return checkedCount
+        //        }
+        return sourceArray
     }
 }
