@@ -16,6 +16,19 @@ Pane {
             width: swipe.width
             height: swipe.height
 
+            PinchArea {
+                anchors.fill: parent
+                pinch.target: firstPage
+                pinch.minimumScale: 1
+                pinch.maximumScale: 10
+                pinch.dragAxis: Pinch.XAndYAxis
+                onSmartZoom: { firstPage.scale = pinch.scale }
+                onPinchFinished: {
+                    firstPage.scale = 1
+                    firstPage.x = 0
+                    firstPage.y = 0
+                }
+            }
             Label {
                 id: label
                 text: qsTr("Choose one or more images. You can upload your own photos or pictures.")
@@ -48,19 +61,6 @@ Pane {
                     }
                 }
             }
-            PinchArea {
-                anchors.fill: parent
-                pinch.target: firstPage
-                pinch.minimumScale: 1
-                pinch.maximumScale: 10
-                pinch.dragAxis: Pinch.XAndYAxis
-                onSmartZoom: { firstPage.scale = pinch.scale }
-                onPinchFinished: {
-                    firstPage.scale = 1
-                    firstPage.x = 0
-                    firstPage.y = 0
-                }
-            }
         }
         Component.onCompleted: swipe.addItem(newPage.createObject(swipe))
     }
@@ -72,39 +72,6 @@ Pane {
             width: swipe.width
             height: swipe.height
 
-            Grid {
-                id: grid2
-                columns: 2
-                spacing: 10
-                width: parent.width
-                height: parent.height
-
-                Repeater {
-                    id: rep
-                    model: 1
-                    BrainTemplate { sourceImg: "qrc:/images/plus.png" }
-                }
-            }
-            Button {
-                id: confirmButton
-                text: qsTr("OK")
-                anchors {margins: 10; bottomMargin: 50; bottom: parent.bottom; horizontalCenter: parent.horizontalCenter}
-                onClicked: {
-                    //                    loader.sourceComponent = funcCaller
-                    countChecked()
-                    info.open()
-                    console.log("User chose " + countChecked().length + " image(s): " + countChecked().toString())
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                    titleLabel.text = "Electrode placement"
-                    stackView.replace( "qrc:/pages/ElectrodePlacement.qml", {"images": countChecked()} )
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-                }
-            }
-            InfoPopup {
-                id: info
-                msg: "You chose " + countChecked().length + " image(s)."
-            }
             PinchArea {
                 anchors.fill: parent
                 pinch.target: secondPage
@@ -118,6 +85,41 @@ Pane {
                     secondPage.y = 0
                 }
             }
+            Grid {
+                id: grid2
+                columns: 2
+                spacing: 10
+                width: parent.width
+                height: parent.height
+
+                Repeater {
+                    id: rep
+                    model: 1
+                    BrainTemplate { sourceImg: "qrc:/images/plus.png" }
+                }
+            }
+            InfoPopup {
+                id: info
+                msg: "You chose " + getCheckedImages().length + " image(s)."
+            }
+            Button {
+                id: confirmButton
+                text: qsTr("OK")
+                anchors {margins: 10; bottomMargin: 50 }
+                anchors {bottom: parent.bottom; horizontalCenter: parent.horizontalCenter}
+                onClicked: {
+                    console.log("clicked")
+                    getCheckedImages()
+                    info.open()
+                    console.log("User chose " + getCheckedImages().length + " image(s): " + getCheckedImages().toString())
+                    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                    listView.currentIndex = 2   //index v listview
+                    titleLabel.text = "Electrode placement"
+                    stackView.replace( "qrc:/pages/ElectrodePlacement.qml", {"images": getCheckedImages()} )
+                    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+                }
+            }
             Button {
                 id: addButton
                 text: "+"
@@ -126,6 +128,7 @@ Pane {
                 anchors.right: parent.right
                 anchors.verticalCenter: parent.verticalCenter
                 onClicked: {
+                    console.log("add button clicked")
                     swipe.addItem(newPage.createObject(swipe))
                     swipe.currentIndex++
                     console.log("Page " + swipe.currentIndex + " was added to swipe. (Counting from zero.)")
@@ -149,9 +152,6 @@ Pane {
 
                 }
             }
-//            Loader {
-//                id: loader
-//            }
         }
     }
 
@@ -167,14 +167,14 @@ Pane {
     //        Rectangle { Component.onCompleted: countChecked() }
     //    }
 
-    function countChecked() {
+    function getCheckedImages() {
         // upravit abych to fungovalo na vsechny stranky !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         var checkedCount = 0
         var sourceArray = []
         console.log(" ")
         //        for (var k = 0; k < swipe.count; k++) {
         for (var i = 0; i < rep.count; i++) {
-            console.log(rep.itemAt(i).imgChecked)
+            //            console.log(rep.itemAt(i).imgChecked)
             if (rep.itemAt(i).imgChecked) {
                 checkedCount++
                 sourceArray.push(rep.itemAt(i).sourceImg)

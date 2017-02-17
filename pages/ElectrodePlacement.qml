@@ -17,6 +17,8 @@ SplitView {
         Grid {
             id: imagesGrid
             rows: Math.round(images.length/2)
+            spacing: 10
+            padding: 5
             Repeater {
                 model: images
                 Image {
