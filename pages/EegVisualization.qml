@@ -113,9 +113,10 @@ Pane {
                     info.open()
                     console.log("User chose " + getCheckedImages().length + " image(s): " + getCheckedImages().toString())
                     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                    listView.currentIndex = 2   //index v listview
-                    titleLabel.text = "Electrode placement"
-                    stackView.replace( "qrc:/pages/ElectrodePlacement.qml", {"images": getCheckedImages()} )
+         //           listView.currentIndex = 2   //index v listview
+         //           titleLabel.text = "Electrode placement"
+         //           stackView.replace( "qrc:/pages/ElectrodePlacement.qml", {"images": getCheckedImages()} )
+                    ElectrodePlacement.images = getCheckedImages()
                     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
                 }
@@ -169,14 +170,12 @@ Pane {
 
     function getCheckedImages() {
         // upravit abych to fungovalo na vsechny stranky !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        var checkedCount = 0
         var sourceArray = []
         console.log(" ")
         //        for (var k = 0; k < swipe.count; k++) {
         for (var i = 0; i < rep.count; i++) {
             //            console.log(rep.itemAt(i).imgChecked)
             if (rep.itemAt(i).imgChecked) {
-                checkedCount++
                 sourceArray.push(rep.itemAt(i).sourceImg)
             }
         }

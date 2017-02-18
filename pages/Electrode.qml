@@ -27,9 +27,11 @@ Item {
             Behavior on y { NumberAnimation { duration: 200 } }
 
             Column {
+                id: column
                 Repeater {
                     model: rowCount
                     Row {
+                        id: row
                         Repeater {
                             model: columnCount
                             Rectangle {
@@ -37,7 +39,7 @@ Item {
                                 width: size; height: size; radius: 10
                                 border.color: "grey"
                                 Text {
-                                    text: (rowCount === 1) ? (modelData + 1) : 0
+                                    text: columnCount*(rowCount-row.getIndex()) + (modelData+1)
                                     anchors.fill: parent
                                     horizontalAlignment:Text.AlignHCenter
                                     verticalAlignment: Text.AlignVCenter
@@ -49,9 +51,13 @@ Item {
                             width: size + 5; height: 6; radius: 3
                             y: size / 2 - height / 2
                             border.color: "grey" }
+                        function getIndex() {
+                            return index + 1
+                        }
                     }
                 }
             }
+
 
             PinchArea {
                 enabled: draggable

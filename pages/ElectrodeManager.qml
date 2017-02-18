@@ -31,10 +31,14 @@ Page {
                     padding: 10
 
                     Repeater {
+                        id: stripRep
                         model: 8
                         Row {
                             spacing: 10
+                            property alias count: stripSpin.value
+                            property alias stripColumns: strip.columnCount
                             SpinBox {
+                                id: stripSpin
                                 value: 0
                                 anchors.verticalCenter: parent.verticalCenter
                             }
@@ -73,10 +77,15 @@ Page {
                     padding: 10
 
                     Repeater {
+                        id: gridRep
                         model: 2
                         Row {
                             spacing: 10
+                            property alias count: gridSpin.value
+                            property alias gridRows: grid.rowCount
+                            property alias gridColumns: grid.columnCount
                             SpinBox {
+                                id: gridSpin
                                 value: 0
                                 anchors.verticalCenter: parent.verticalCenter
                             }
@@ -106,10 +115,18 @@ Page {
         text: "Add new type of strip or grid"
         x: (parent.width - width) / 2
         anchors.bottom: parent.bottom
-        anchors.bottomMargin: 15
+        anchors.right: confirmButton.left
+        anchors.margins: 15
         onClicked: addDialog.open()
     }
-
+    Button {
+        id: confirmButton
+        text: qsTr("Confirm")
+        anchors.bottom: parent.bottom
+        anchors.left: addButton.right
+        anchors.margins: 15
+        onClicked: getElectrodes()
+    }
     Popup {
         id: addDialog
         modal: true
@@ -136,36 +153,17 @@ Page {
                 from: 1
                 value: 5
             }
-//            CheckBox {
-//                id: checkBox
-//                text: qsTr("set different indexing")
-//            }
-//            Label { text: " " }
+            //            CheckBox {
+            //                id: checkBox
+            //                text: qsTr("set different indexing")
+            //            }
+            //            Label { text: " " }
             Button {
                 id: okButton
                 text: qsTr("Add")
                 onClicked: {
-//                    if (checkBox.checked) { indexingDialog.open() }
-                    var newElectrode
-                    var component = Qt.createComponent("qrc:/pages/Electrode.qml");
-                    var columnCount = columnSpinBox.value
-                    var rowCount = rowSpinBox.value
-
-                    //for strips rows = 1
-                    if (columnCount === 1 && rowCount !== 1) {
-                        columnCount = rowCount
-                        rowCount = 1
-                    }
-                    if (rowCount === 1) {
-                        newElectrode = component.createObject(stripColumn, {"columnCount": columnCount, "rowCount": rowCount, "flickable": false});
-                        bar.currentIndex = 0
-                    } else {
-                        newElectrode = component.createObject(gridColumn, {"columnCount": columnCount, "rowCount": rowCount, "flickable": false});
-                        bar.currentIndex = 1
-                    }
-                    console.log("New electrode " + rowCount + "x" + columnCount + " was added.")
+                    addDialog.addElectrode(columnSpinBox.value, rowSpinBox.value)
                     addDialog.close()
-
                 }
             }
             Button {
@@ -173,45 +171,44 @@ Page {
                 text: qsTr("Cancel")
                 onClicked: addDialog.close()
             }
+
+        }
+        function addElectrode(columnCount, rowCount) {
+            //                    if (checkBox.checked) { indexingDialog.open() }
+            var newElectrode
+            var component = Qt.createComponent("qrc:/pages/Electrode.qml");
+
+            //for strips rows = 1
+            if (columnCount === 1 && rowCount !== 1) {
+                columnCount = rowCount
+                rowCount = 1
+            }
+            if (rowCount === 1) {
+                newElectrode = component.createObject(stripColumn, {"columnCount": columnCount, "rowCount": rowCount, "flickable": false});
+                bar.currentIndex = 0
+            } else {
+                newElectrode = component.createObject(gridColumn, {"columnCount": columnCount, "rowCount": rowCount, "flickable": false});
+                bar.currentIndex = 1
+            }
+            console.log("New electrode " + rowCount + "x" + columnCount + " was added.")
         }
     }
 
-    //    Popup {
-    //        id: indexingDialog
-    //        property var indexing: []
-    //        modal: true
-    //        focus: true
-    //        x: (parent.width - width) / 2
-    //        y: parent.height/6
-    //        Column {
-    //            spacing: 10
-    //            Label { text: qsTr("<b>Indexing</b>") }
-    //            Grid {
-    //                id: gridPopup
-    //                columns: columnSpinBox.value
-    //                rows: rowSpinBox.value
-    //                Repeater {
-    //                    id: rep
-    //                    model: gridPopup.columns * gridPopup.rows
-    //                    TextField {
-    //                        id: textfield
-    //                        placeholderText: qsTr("0")
-    //                        background: Rectangle {
-    //                            width: 20; height: 20; radius: 10
-    //                            border.color: "black"
-    //                        }
-    //                    }
-    //                }
-    //            }
-
-    //            Button {
-    //                anchors.horizontalCenter: parent.horizontalCenter
-    //                text: "OK"
-    //                onClicked: {
-
-    //                    indexingDialog.close()
-    //                }
-    //            }
-    //        }
-    //    }
+    function getElectrodes() {
+        var sourceArray = []
+        console.log(" ")
+        for (var i = 0; i < stripRep.count; i++) {
+            if (stripRep.itemAt(i).count !== 0) {
+                console.log(stripRep.itemAt(i).count)
+                console.log(stripRep.itemAt(i).stripColumns + "x1")
+            }
+        }
+        for (var j = 0; j < gridRep.count; j++) {
+            if (gridRep.itemAt(j).count !== 0) {
+                console.log(gridRep.itemAt(j).count)
+                console.log( gridRep.itemAt(j).gridRows + "x" + gridRep.itemAt(j).gridColumns)
+            }
+        }
+        return sourceArray
+    }
 }
