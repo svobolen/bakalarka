@@ -54,6 +54,7 @@ SplitView {
             padding: 5
 
             Button {
+                id: exportButton
                 text: qsTr("Export image")
             }
             Button {
@@ -107,6 +108,7 @@ SplitView {
                 }
             }
             Switch {
+                id: zoomSwitch
                 text: qsTr("Image zoom")
                 checked: false
                 onCheckedChanged: { zoomEnabled = checked ? true : false }

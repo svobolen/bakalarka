@@ -30,10 +30,21 @@ Page {
                     spacing: 10
                     padding: 10
 
+                    ListModel {
+                        id: stripModel
+                        ListElement { columns: 4 }
+                        ListElement { columns: 5 }
+                        ListElement { columns: 6 }
+                        ListElement { columns: 7 }
+                        ListElement { columns: 8 }
+                        ListElement { columns: 9 }
+                        ListElement { columns: 10 }
+                    }
+
                     Repeater {
                         id: stripRep
-                        model: 8
-                        Row {
+                        model: stripModel
+                        delegate: Row {
                             spacing: 10
                             property alias count: stripSpin.value
                             property alias stripColumns: strip.columnCount
@@ -49,7 +60,7 @@ Page {
                             }
                             Electrode {
                                 id: strip
-                                columnCount: index + 4
+                                columnCount: columns
                                 rowCount: 1
                                 flickable: false
                                 anchors.verticalCenter: parent.verticalCenter
@@ -76,9 +87,20 @@ Page {
                     spacing: 10
                     padding: 10
 
+                    ListModel {
+                        id: gridModel
+                        ListElement { columns: 4; rows: 4 }
+                        ListElement { columns: 5; rows: 5 }
+                        ListElement { columns: 6; rows: 5 }
+                        ListElement { columns: 7; rows: 3 }
+                        ListElement { columns: 8; rows: 5 }
+                        ListElement { columns: 9; rows: 2 }
+                        ListElement { columns: 10; rows: 3 }
+                    }
+
                     Repeater {
                         id: gridRep
-                        model: 2
+                        model: gridModel
                         Row {
                             spacing: 10
                             property alias count: gridSpin.value
@@ -96,8 +118,8 @@ Page {
                             }
                             Electrode {
                                 id: grid
-                                columnCount: index + 4
-                                rowCount: 5
+                                columnCount: columns
+                                rowCount: rows
                                 flickable: false
                                 anchors.verticalCenter: parent.verticalCenter
                             }
@@ -153,11 +175,6 @@ Page {
                 from: 1
                 value: 5
             }
-            //            CheckBox {
-            //                id: checkBox
-            //                text: qsTr("set different indexing")
-            //            }
-            //            Label { text: " " }
             Button {
                 id: okButton
                 text: qsTr("Add")
@@ -173,21 +190,21 @@ Page {
             }
 
         }
+
         function addElectrode(columnCount, rowCount) {
-            //                    if (checkBox.checked) { indexingDialog.open() }
-            var newElectrode
-            var component = Qt.createComponent("qrc:/pages/Electrode.qml");
 
             //for strips rows = 1
             if (columnCount === 1 && rowCount !== 1) {
                 columnCount = rowCount
                 rowCount = 1
-            }
+            }            
             if (rowCount === 1) {
-                newElectrode = component.createObject(stripColumn, {"columnCount": columnCount, "rowCount": rowCount, "flickable": false});
+                //create strip
+                stripModel.append({ columns: columnCount })
                 bar.currentIndex = 0
             } else {
-                newElectrode = component.createObject(gridColumn, {"columnCount": columnCount, "rowCount": rowCount, "flickable": false});
+                //create grid
+                gridModel.append({ columns: columnCount, rows: rowCount })
                 bar.currentIndex = 1
             }
             console.log("New electrode " + rowCount + "x" + columnCount + " was added.")

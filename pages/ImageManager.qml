@@ -13,6 +13,7 @@ Pane {
 
         Pane {
             id: firstPage
+            property alias images: rep
             width: swipe.width
             height: swipe.height
 
@@ -62,13 +63,15 @@ Pane {
                 }
             }
         }
-        Component.onCompleted: swipe.addItem(newPage.createObject(swipe))
+        Component.onCompleted: {
+            swipe.addItem(newPage.createObject(swipe))
+        }
     }
-
     Component {
         id: newPage
         Pane {
             id: secondPage
+            property alias images: rep
             width: swipe.width
             height: swipe.height
 
@@ -88,19 +91,19 @@ Pane {
             Grid {
                 id: grid2
                 columns: 2
+                rows: 2
                 spacing: 10
                 width: parent.width
                 height: parent.height
 
                 Repeater {
                     id: rep
-                    model: 1
-                    BrainTemplate { sourceImg: "qrc:/images/plus.png" }
+                    model: ["qrc:/images/plus.png"]
+                    BrainTemplate { sourceImg: modelData }
                 }
             }
             InfoPopup {
                 id: info
-                msg: "You chose " + getCheckedImages().length + " image(s)."
             }
             Button {
                 id: confirmButton
@@ -108,15 +111,15 @@ Pane {
                 anchors {margins: 10; bottomMargin: 50 }
                 anchors {bottom: parent.bottom; horizontalCenter: parent.horizontalCenter}
                 onClicked: {
-                    console.log("clicked")
-                    getCheckedImages()
+                    var checkedImages = getCheckedImages()
+                    info.msg = "You chose " + checkedImages.length + " image(s)."
                     info.open()
-                    console.log("User chose " + getCheckedImages().length + " image(s): " + getCheckedImages().toString())
+                    console.log("User chose " + checkedImages.length + " image(s): " + checkedImages.toString())
                     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-         //           listView.currentIndex = 2   //index v listview
-         //           titleLabel.text = "Electrode placement"
-         //           stackView.replace( "qrc:/pages/ElectrodePlacement.qml", {"images": getCheckedImages()} )
-                    ElectrodePlacement.images = getCheckedImages()
+                    listView.currentIndex = 5   //index v listview
+                    titleLabel.text = "Electrode placement"
+                    stackView.replace( "qrc:/pages/ElectrodePlacement.qml", {"images": checkedImages} )
+//           ElectrodePlacement.images = getCheckedImages()
                     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
                 }
@@ -129,7 +132,6 @@ Pane {
                 anchors.right: parent.right
                 anchors.verticalCenter: parent.verticalCenter
                 onClicked: {
-                    console.log("add button clicked")
                     swipe.addItem(newPage.createObject(swipe))
                     swipe.currentIndex++
                     console.log("Page " + swipe.currentIndex + " was added to swipe. (Counting from zero.)")
@@ -163,23 +165,17 @@ Pane {
         anchors {bottom: parent.bottom; horizontalCenter: parent.horizontalCenter}
     }
 
-    //    Component {
-    //        id: funcCaller
-    //        Rectangle { Component.onCompleted: countChecked() }
-    //    }
 
     function getCheckedImages() {
-        // upravit abych to fungovalo na vsechny stranky !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         var sourceArray = []
-        console.log(" ")
-        //        for (var k = 0; k < swipe.count; k++) {
-        for (var i = 0; i < rep.count; i++) {
-            //            console.log(rep.itemAt(i).imgChecked)
-            if (rep.itemAt(i).imgChecked) {
-                sourceArray.push(rep.itemAt(i).sourceImg)
+        for (var k = 0; k < swipe.count; k++) {
+            console.log(swipe.itemAt(k).images.count)
+            for (var i = 0; i < swipe.itemAt(k).images.count; i++) {               
+                if (swipe.itemAt(k).images.itemAt(i).imgChecked) {
+                    sourceArray.push(swipe.itemAt(k).images.itemAt(i).sourceImg)
+                }
             }
         }
-        //        }
         return sourceArray
     }
 }

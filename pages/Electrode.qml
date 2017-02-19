@@ -58,7 +58,6 @@ Item {
                 }
             }
 
-
             PinchArea {
                 enabled: draggable
                 anchors.fill: parent

@@ -89,9 +89,10 @@ ApplicationWindow {
 
             model: ListModel {
                 ListElement { title: "Load file"; source: "qrc:/pages/LoadFile.qml" }
-                ListElement { title: "EEG visualization"; source: "qrc:/pages/EegVisualization.qml" }
-                ListElement { title: "Electrode Placement"; source: "qrc:/pages/ElectrodePlacement.qml" }
+                ListElement { title: "Image Manager"; source: "qrc:/pages/ImageManager.qml" }
                 ListElement { title: "Electrode Manager"; source: "qrc:/pages/ElectrodeManager.qml" }
+                ListElement { title: "Link Signal with Electrode"; source: "qrc:/pages/ElectrodeSignalLink.qml"}
+                ListElement { title: "Electrode Placement"; source: "qrc:/pages/ElectrodePlacement.qml" }
                 ListElement { title: "Drag and drop"; source: "qrc:/pages/electrodes/Item.qml" }
             }
             ScrollIndicator.vertical: ScrollIndicator { }
