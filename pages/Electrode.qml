@@ -15,66 +15,14 @@ Item {
         id: flick
         enabled: flickable
 
-        Rectangle {
+        BasicElectrode {
             id: electrode
-            width: columnCount*size; height: rowCount*size; radius: size/2
-            opacity: 0.8
-            border.color: "grey"
-
+            columnCount: root.columnCount
+            rowCount: root.rowCount
+            size: root.size
             Behavior on scale { NumberAnimation { duration: 200 } }
             Behavior on x { NumberAnimation { duration: 200 } }
             Behavior on y { NumberAnimation { duration: 200 } }
-
-            Column {
-                id: column
-                Repeater {
-                    model: rowCount
-                    Row {
-                        id: row
-                        Repeater {
-                            model: columnCount
-
-                            DropArea {
-                                id: dragTarget
-                                property alias dropProxy: dragTarget
-                                width: size; height: size
-
-                                Rectangle {
-                                    id: dropRectangle
-                                    opacity: 0.8
-                                    width: size; height: size; radius: size/2
-                                    color: "red"
-                                    border.color: "grey"
-                                    states: [
-                                        State {
-                                            when: dragTarget.containsDrag
-                                            PropertyChanges {
-                                                target: dropRectangle
-                                                color: "green"
-                                            }
-                                        }
-                                    ]
-                                    Text {
-                                        text: columnCount*(rowCount-row.getIndex()) + (modelData+1)
-                                        anchors.fill: parent
-                                        horizontalAlignment:Text.AlignHCenter
-                                        verticalAlignment: Text.AlignVCenter
-                                    }
-                                }
-                            }
-                        }
-                        Rectangle {
-                            opacity: 0.8
-                            width: size + 5; height: 6; radius: 3
-                            y: size / 2 - height / 2
-                            border.color: "grey"
-                        }
-                        function getIndex() {
-                            return index + 1
-                        }
-                    }
-                }
-            }
 
             PinchArea {
                 enabled: draggable

@@ -33,7 +33,6 @@ Item {
                                 id: dropRectangle
                                 opacity: 0.8
                                 width: size; height: size; radius: size/2
-                                color: "red"
                                 border.color: "grey"
                                 states: [
                                     State {

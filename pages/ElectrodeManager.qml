@@ -59,11 +59,10 @@ Page {
                                 font.pixelSize: 12
                                 anchors.verticalCenter: parent.verticalCenter
                             }
-                            Electrode {
+                            BasicElectrode {
                                 id: strip
                                 columnCount: columns
                                 rowCount: 1
-                                flickable: false
                                 anchors.verticalCenter: parent.verticalCenter
                             }
                         }
@@ -117,11 +116,10 @@ Page {
                                 font.pixelSize: 12
                                 anchors.verticalCenter: parent.verticalCenter
                             }
-                            Electrode {
+                            BasicElectrode {
                                 id: grid
                                 columnCount: columns
                                 rowCount: rows
-                                flickable: false
                                 anchors.verticalCenter: parent.verticalCenter
                             }
                         }
