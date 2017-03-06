@@ -34,7 +34,6 @@ SplitView {
                 }
             }
         }
-
         PinchArea {
             enabled: zoomEnabled
             anchors.fill: parent

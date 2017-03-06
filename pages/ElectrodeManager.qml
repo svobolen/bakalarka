@@ -152,6 +152,12 @@ Page {
             var chosenElecs = getChosenElectrodes()
             if (chosenElecs.count === 0) {
                 console.log("User did not choose any electrode.")
+            } else {
+                //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                listView.currentIndex = 3   //index v listview
+                titleLabel.text = "Link Signal with Electrode"
+                stackView.push( "qrc:/pages/ElectrodeSignalLink.qml", {"electrodes": chosenElecs, "name": "Link Signal with Electrode"} )
+                //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             }
         }
     }
@@ -203,7 +209,7 @@ Page {
             if (columnCount === 1 && rowCount !== 1) {
                 columnCount = rowCount
                 rowCount = 1
-            }            
+            }
             if (rowCount === 1) {
                 //create strip
                 stripModel.append({ columns: columnCount })

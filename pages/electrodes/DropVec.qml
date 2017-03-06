@@ -1,6 +1,7 @@
-import QtQuick 2.0
+import QtQuick 2.6
+import QtQuick.Controls 2.0
 
-//! [0]
+
 DropArea {
     id: dragTarget
 
@@ -10,7 +11,7 @@ DropArea {
 
     Rectangle {
         id: dropRectangle
-
+        color: "black"
         anchors.fill: parent
 
         states: [
@@ -24,3 +25,4 @@ DropArea {
         ]
     }
 }
+

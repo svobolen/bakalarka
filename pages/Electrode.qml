@@ -8,8 +8,7 @@ Item {
     property int highestZ: 0            //posledni obrazek je nahore
     property bool draggable: false
     property bool flickable: true
-    readonly property int size: 20
-    property int currRow: 0
+    property int size: 20
     width: columnCount*size; height: rowCount*size;
 
     Flickable {
@@ -18,7 +17,7 @@ Item {
 
         Rectangle {
             id: electrode
-            width: columnCount*size; height: rowCount*size; radius: 10
+            width: columnCount*size; height: rowCount*size; radius: size/2
             opacity: 0.8
             border.color: "grey"
 
@@ -34,15 +33,33 @@ Item {
                         id: row
                         Repeater {
                             model: columnCount
-                            Rectangle {
-                                opacity: 0.8
-                                width: size; height: size; radius: 10
-                                border.color: "grey"
-                                Text {
-                                    text: columnCount*(rowCount-row.getIndex()) + (modelData+1)
-                                    anchors.fill: parent
-                                    horizontalAlignment:Text.AlignHCenter
-                                    verticalAlignment: Text.AlignVCenter
+
+                            DropArea {
+                                id: dragTarget
+                                property alias dropProxy: dragTarget
+                                width: size; height: size
+
+                                Rectangle {
+                                    id: dropRectangle
+                                    opacity: 0.8
+                                    width: size; height: size; radius: size/2
+                                    color: "red"
+                                    border.color: "grey"
+                                    states: [
+                                        State {
+                                            when: dragTarget.containsDrag
+                                            PropertyChanges {
+                                                target: dropRectangle
+                                                color: "green"
+                                            }
+                                        }
+                                    ]
+                                    Text {
+                                        text: columnCount*(rowCount-row.getIndex()) + (modelData+1)
+                                        anchors.fill: parent
+                                        horizontalAlignment:Text.AlignHCenter
+                                        verticalAlignment: Text.AlignVCenter
+                                    }
                                 }
                             }
                         }
@@ -50,7 +67,8 @@ Item {
                             opacity: 0.8
                             width: size + 5; height: 6; radius: 3
                             y: size / 2 - height / 2
-                            border.color: "grey" }
+                            border.color: "grey"
+                        }
                         function getIndex() {
                             return index + 1
                         }

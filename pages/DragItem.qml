@@ -2,30 +2,37 @@ import QtQuick 2.0
 
 Item {
     id: root
-
-    width: 64; height: 64
+    property int size: 20
+    property string waveName: "X"
+//    property var data
+    width: size; height: size
 
     MouseArea {
         id: mouseArea
-
-        width: parent.width; height: parent.height
+        width: size; height: size
         anchors.centerIn: parent
-
         drag.target: tile
 
         onReleased: parent = (tile.Drag.target !== null) ? tile.Drag.target : root
 
         Rectangle {
             id: tile
+            width: size; height: size; radius: size/2
             border.color: "black"
-            width: 64; height: 64
             //aby se to chytalo na stred
             anchors.verticalCenter: parent.verticalCenter
             anchors.horizontalCenter: parent.horizontalCenter
 
             Drag.active: mouseArea.drag.active
-            Drag.hotSpot.x: 32
-            Drag.hotSpot.y: 32
+            Drag.hotSpot.x: width/2
+            Drag.hotSpot.y: height/2
+
+            Text {
+                text: waveName
+                anchors.fill: parent
+                horizontalAlignment:Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+            }
 
             states: State {
                 when: mouseArea.drag.active

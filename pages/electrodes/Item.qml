@@ -2,7 +2,7 @@ import QtQuick 2.0
 
 Rectangle {
     id: root
-    color: "black"
+//    color: "black"
 
     Grid {
         id: destination
@@ -11,11 +11,11 @@ Rectangle {
         width: parent.width
         height: parent.height
         opacity: 0.5
-        columns: 9
-        spacing: 5
+        columns: 5
+        spacing: 20
 
         Repeater {
-            model: 81;
+            model: 25;
             delegate: DropVec {}
         }
     }
