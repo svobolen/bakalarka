@@ -5,6 +5,8 @@ import QtQuick.Dialogs 1.2
 
 Pane {
     id: pane
+    property var name
+//    property alias imageModel: imageModel
 
     SwipeView {
         id: swipe
@@ -96,10 +98,18 @@ Pane {
                 width: parent.width
                 height: parent.height
 
+                ListModel {
+                    id: imageModel
+                    ListElement { sourcePath: "qrc:/images/plus.png"}
+                    ListElement { sourcePath: "qrc:/images/plus.png"}
+                    ListElement { sourcePath: "qrc:/images/plus.png"}
+                    ListElement { sourcePath: "qrc:/images/plus.png"}
+                }
+
                 Repeater {
                     id: rep
-                    model: ["qrc:/images/plus.png"]
-                    BrainTemplate { sourceImg: modelData }
+                    model: imageModel
+                    BrainTemplate { sourceImg: sourcePath }
                 }
             }
             InfoPopup {
@@ -116,10 +126,9 @@ Pane {
                     info.open()
                     console.log("User chose " + checkedImages.length + " image(s): " + checkedImages.toString())
                     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                    listView.currentIndex = 5   //index v listview
+                    listView.currentIndex = 4   //index v listview
                     titleLabel.text = "Electrode placement"
-                    stackView.replace( "qrc:/pages/ElectrodePlacement.qml", {"images": checkedImages} )
-//           ElectrodePlacement.images = getCheckedImages()
+                    stackView.push( "qrc:/pages/ElectrodePlacement.qml", {"images": checkedImages, "name": "Electrode Placement"} )
                     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
                 }

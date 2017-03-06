@@ -8,6 +8,7 @@ Image {
     property bool checkboxVisible: false
     property alias imgChecked: checkbox.checked
     readonly property string plusImgSource: "qrc:/images/plus.png"
+//    property alias manager: ImageManager.imageModel
 
 
     id: brainImage
@@ -41,10 +42,10 @@ Image {
             }
             function addImage(source) {
                 //add new empty plus image when you add new image
-                if (brainImage.source == plusImgSource) {
-                    var component = Qt.createComponent("qrc:/pages/BrainTemplate.qml");
-                    var elec = component.createObject(parent.parent, {sourceImg: plusImgSource});
-                }
+//                if (brainImage.source == plusImgSource) {
+//                    var component = Qt.createComponent("qrc:/pages/BrainTemplate.qml");
+//                    var elec = component.createObject(parent.parent, {sourceImg: plusImgSource});
+//                }
                 brainImage.source = source
                 sourceImg = source
                 checkbox.visible = true
@@ -57,6 +58,7 @@ Image {
             }
         }
     }
+
     Loader {
         id: loader
     }

@@ -9,6 +9,7 @@ ApplicationWindow {
     height: 660
     visible: true
     title: "My Application"
+    //    property var images: []
 
     header: ToolBar {
 
@@ -81,11 +82,24 @@ ApplicationWindow {
                     if (listView.currentIndex != index) {
                         listView.currentIndex = index
                         titleLabel.text = model.title
-                        stackView.replace(model.source)
+
+//                        var position = 0;
+
+                        var stackItem = stackView.find(function(item, index) {
+//                            position = index
+                            return item.name === model.title })
+
+                        if (stackItem === null) {
+                            stackView.push(model.source, {"name": model.title})
+
+                        } else {
+                            stackView.push(stackItem)
+                        }
                     }
                     drawer.close()
                 }
             }
+            Item {id: item; property var name: "ahoj"}
 
             model: ListModel {
                 ListElement { title: "Load file"; source: "qrc:/pages/LoadFile.qml" }
@@ -105,6 +119,7 @@ ApplicationWindow {
 
         initialItem: Pane {
             id: pane
+            property var name: "Welcome page"
             Image {
                 source: "qrc:/images/Doctor_Hibbert.png"
                 anchors.horizontalCenter: parent.horizontalCenter

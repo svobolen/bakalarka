@@ -4,8 +4,13 @@ import QtQuick.Controls 1.4
 import QtQuick.Controls 2.0
 
 SplitView {
+    property var name
     property bool zoomEnabled: false
     property var images: []
+    property ListModel electrodes: ListModel {
+        ListElement {columns: 5; rows: 2}
+    }
+//    property list<Electrode> electrodes
     orientation: Qt.Horizontal
 
     Item {
@@ -24,8 +29,8 @@ SplitView {
                 Image {
                     source: modelData
                     fillMode: Image.PreserveAspectFit
-                    width: (imagesGrid.rows == 1 && images.length !== 1) ? imageArea.width/(imagesGrid.rows+1) : imageArea.width/imagesGrid.rows
-                    height: imageArea.height/imagesGrid.rows
+                    width: (imagesGrid.rows == 1 && images.length !== 1) ? (imageArea.width-20)/(imagesGrid.rows+1) : imageArea.width/imagesGrid.rows
+                    height: (imageArea.height-20)/imagesGrid.rows
                 }
             }
         }
@@ -115,9 +120,10 @@ SplitView {
             }
             Repeater {
                 id: elecRep
-                model: 8
+                model: electrodes
                 Electrode {
-                    columnCount: index + 4; rowCount:1
+                    columnCount: columns
+                    rowCount: rows
                     draggable: true
                 }
             }

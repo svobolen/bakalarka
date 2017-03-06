@@ -5,6 +5,7 @@ import QtQuick.Controls.Styles 1.4
 
 Page {
     id: item
+    property var name
 
     footer: TabBar {
         id: bar
@@ -147,7 +148,12 @@ Page {
         anchors.bottom: parent.bottom
         anchors.left: addButton.right
         anchors.margins: 15
-        onClicked: getElectrodes()
+        onClicked: {
+            var chosenElecs = getChosenElectrodes()
+            if (chosenElecs.count === 0) {
+                console.log("User did not choose any electrode.")
+            }
+        }
     }
     Popup {
         id: addDialog
@@ -211,21 +217,25 @@ Page {
         }
     }
 
-    function getElectrodes() {
-        var sourceArray = []
-        console.log(" ")
+    ListModel {
+        id: chosenElectrodesList
+        ListElement { count: 0; columns: 0; rows: 0}
+    }
+
+    function getChosenElectrodes() {
+        console.log("User chose following electrodes: ")
         for (var i = 0; i < stripRep.count; i++) {
             if (stripRep.itemAt(i).count !== 0) {
-                console.log(stripRep.itemAt(i).count)
-                console.log(stripRep.itemAt(i).stripColumns + "x1")
+                chosenElectrodesList.append({ count: stripRep.itemAt(i).count, columns: stripRep.itemAt(i).stripColumns, rows: 1 })
+                console.log(stripRep.itemAt(i).count + "x strip 1x" + stripRep.itemAt(i).stripColumns)
             }
         }
         for (var j = 0; j < gridRep.count; j++) {
             if (gridRep.itemAt(j).count !== 0) {
-                console.log(gridRep.itemAt(j).count)
-                console.log( gridRep.itemAt(j).gridRows + "x" + gridRep.itemAt(j).gridColumns)
+                chosenElectrodesList.append({ count: gridRep.itemAt(j).count, columns: gridRep.itemAt(j).gridColumns, rows: gridRep.itemAt(j).gridRows })
+                console.log(gridRep.itemAt(j).count + "x grid " + gridRep.itemAt(j).gridRows + "x" + gridRep.itemAt(j).gridColumns)
             }
         }
-        return sourceArray
+        return chosenElectrodesList
     }
 }

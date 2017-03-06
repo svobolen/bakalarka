@@ -3,7 +3,7 @@ import QtQuick.Controls 2.0
 import QtQuick.Dialogs 1.0
 
 Pane {
-
+    property var name
     Column {
 
         FileDialog {
