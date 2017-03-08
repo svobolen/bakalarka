@@ -9,7 +9,8 @@ ApplicationWindow {
     height: 660
     visible: true
     title: "My Application"
-    //    property var images: []
+    property var images
+    property var electrodes
 
     header: ToolBar {
 
@@ -74,42 +75,27 @@ ApplicationWindow {
             currentIndex: -1
             anchors.fill: parent
 
+
             delegate: ItemDelegate {
                 width: parent.width
                 text: model.title
                 highlighted: ListView.isCurrentItem
                 onClicked: {
-                    if (listView.currentIndex != index) {
-                        listView.currentIndex = index
-                        titleLabel.text = model.title
-
-//                        var position = 0;
-
-                        var stackItem = stackView.find(function(item, index) {
-//                            position = index
-                            return item.name === model.title })
-
-                        if (stackItem === null) {
-                            stackView.push(model.source, {"name": model.title})
-
-                        } else {
-                            stackView.push(stackItem)
-                        }
-                    }
+                    changePage(model.title, model.source, index)
                     drawer.close()
                 }
             }
-            Item {id: item; property var name: "ahoj"}
+            model: pageModel
+            ScrollIndicator.vertical: ScrollIndicator { }
 
-            model: ListModel {
+            ListModel {
+                id: pageModel
                 ListElement { title: "Load file"; source: "qrc:/pages/LoadFile.qml" }
                 ListElement { title: "Image Manager"; source: "qrc:/pages/ImageManager.qml" }
                 ListElement { title: "Electrode Manager"; source: "qrc:/pages/ElectrodeManager.qml" }
                 ListElement { title: "Link Signal with Electrode"; source: "qrc:/pages/ElectrodeSignalLink.qml"}
                 ListElement { title: "Electrode Placement"; source: "qrc:/pages/ElectrodePlacement.qml" }
-                ListElement { title: "Drag and drop"; source: "qrc:/pages/electrodes/Item.qml" }
             }
-            ScrollIndicator.vertical: ScrollIndicator { }
         }
     }
 
@@ -119,7 +105,7 @@ ApplicationWindow {
 
         initialItem: Pane {
             id: pane
-            property var name: "Welcome page"
+            property string name: "Welcome page"
             Image {
                 source: "qrc:/images/Doctor_Hibbert.png"
                 anchors.horizontalCenter: parent.horizontalCenter
@@ -157,7 +143,7 @@ ApplicationWindow {
             spacing: 20
 
             Label {
-                text: "About"
+                text: qsTr("About")
                 font.bold: true
             }
 
@@ -179,6 +165,22 @@ ApplicationWindow {
                 id: okButton
                 text: "Ok"
                 onClicked: aboutDialog.close()
+            }
+        }
+    }
+
+    function changePage(title, source, index) {
+        if (listView.currentIndex !== index) {
+            listView.currentIndex = index
+            titleLabel.text = title
+
+            var stackItem = stackView.find(function(item, index) {
+                return item.name === title })
+
+            if (stackItem === null) {
+                stackView.push(source, {"name": title})
+            } else {
+                stackView.push(stackItem)
             }
         }
     }

@@ -6,7 +6,6 @@ import QtQuick.Dialogs 1.2
 Pane {
     id: pane
     property var name
-//    property alias imageModel: imageModel
 
     SwipeView {
         id: swipe
@@ -109,12 +108,10 @@ Pane {
                 Repeater {
                     id: rep
                     model: imageModel
-                    BrainTemplate { sourceImg: sourcePath }
+                    BrainTemplate { sourceImg: model.sourcePath }
                 }
             }
-            InfoPopup {
-                id: info
-            }
+
             Button {
                 id: confirmButton
                 text: qsTr("OK")
@@ -122,13 +119,13 @@ Pane {
                 anchors {bottom: parent.bottom; horizontalCenter: parent.horizontalCenter}
                 onClicked: {
                     var checkedImages = getCheckedImages()
-                    info.msg = "You chose " + checkedImages.length + " image(s)."
-                    info.open()
+//                    info.msg = "You chose " + checkedImages.length + " image(s)."
+//                    info.open()
                     console.log("User chose " + checkedImages.length + " image(s): " + checkedImages.toString())
-                    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                    listView.currentIndex = 4   //index v listview
-                    titleLabel.text = "Electrode placement"
-                    stackView.push( "qrc:/pages/ElectrodePlacement.qml", {"images": checkedImages, "name": "Electrode Placement"} )
+                    window.images = checkedImages
+                    listView.currentIndex = 3   //index v listview
+                    titleLabel.text = "Electrode manager"
+                    stackView.push( "qrc:/pages/ElectrodeManager.qml", {"name": "Electrode Manager"} )
                     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
                 }
@@ -178,7 +175,6 @@ Pane {
     function getCheckedImages() {
         var sourceArray = []
         for (var k = 0; k < swipe.count; k++) {
-            console.log(swipe.itemAt(k).images.count)
             for (var i = 0; i < swipe.itemAt(k).images.count; i++) {               
                 if (swipe.itemAt(k).images.itemAt(i).imgChecked) {
                     sourceArray.push(swipe.itemAt(k).images.itemAt(i).sourceImg)

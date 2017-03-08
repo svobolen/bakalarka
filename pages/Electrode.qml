@@ -6,7 +6,7 @@ Item {
     property int columnCount
     property int rowCount
     property int highestZ: 0            //posledni obrazek je nahore
-    property bool draggable: false
+    property bool draggable: true
     property bool flickable: true
     property int size: 20
     width: columnCount*size; height: rowCount*size;

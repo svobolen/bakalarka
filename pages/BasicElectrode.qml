@@ -34,12 +34,14 @@ Item {
                                 opacity: 0.8
                                 width: size; height: size; radius: size/2
                                 border.color: "grey"
+                                property var signal
                                 states: [
                                     State {
                                         when: dragTarget.containsDrag
                                         PropertyChanges {
                                             target: dropRectangle
                                             color: "green"
+//                                            signal:
                                         }
                                     }
                                 ]

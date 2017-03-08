@@ -62,10 +62,27 @@ Image {
     Loader {
         id: loader
     }
-    InfoPopup {
+
+    Popup {
         id: info
-        msg: "Please choose a image file (*.jpg, *.png)"
+        modal: true
+        focus: true
+        x: (window.width - width) / 2
+        y: (window.height - height) / 6
+        Column {
+            spacing: 10
+            Label { text: qsTr("<b>Information</b>") }
+            Label { text: qsTr("Please choose a image file (*.jpg, *.png)") }
+            Button {
+                text: qsTr("OK")
+                onClicked: {
+                    info.close()
+                }
+            }
+        }
     }
+
+
     CheckBox {
         id: checkbox
         visible: checkboxVisible
@@ -113,7 +130,7 @@ Image {
             MenuItem {
                 text: qsTr("Change")
                 onClicked: loader.sourceComponent = fileDialogComponent
-                //                onClicked: fileDialog.open()
+//                onClicked: fileDialog.open()
             }
             MenuItem {
                 text: qsTr("Delete")

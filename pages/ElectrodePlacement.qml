@@ -10,7 +10,6 @@ SplitView {
     property ListModel electrodes: ListModel {
         ListElement {columns: 5; rows: 2}
     }
-//    property list<Electrode> electrodes
     orientation: Qt.Horizontal
 
     Item {
@@ -21,7 +20,7 @@ SplitView {
 
         Grid {
             id: imagesGrid
-            rows: Math.round(images.length/2)
+            rows: images == null ? 0 : Math.round(images.length/2)
             spacing: 10
             padding: 5
             Repeater {
@@ -50,85 +49,108 @@ SplitView {
         }
     }
 
-    Item {
-        id: electrodeTab
-        height: parent.height
-        Column {
-            spacing: 10
-            padding: 5
+    Flickable {
+        contentHeight: electrodeTab.height
+        contentWidth: electrodeTab.width
+        Layout.minimumWidth: 100
 
-            Button {
-                id: exportButton
-                text: qsTr("Export image")
-            }
-            Button {
-                id: fixButton
-                text: qsTr("Fix positions")
-                onClicked: { confirmDialog.open() }
-                function setFlickable () {
-                    for (var i = 0; i < elecRep.count; i++) {
-                        elecRep.itemAt(i).flickable = false
+        Item {
+            id: electrodeTab
+            height: electrodeColumn.height * 1.1
+            width: electrodeColumn.width * 1.1
+            Column {
+                id: electrodeColumn
+                spacing: 10
+                padding: 5
+
+                Button {
+                    id: exportButton
+                    text: qsTr("Export image")
+                }
+                Button {
+                    id: fixButton
+                    text: qsTr("Fix positions")
+                    onClicked: { confirmDialog.open() }
+                    function setFlickable () {
+                        for (var i = 0; i < elecRep.count; i++) {
+                            elecRep.itemAt(i).flickable = false
+                        }
+                        info.open()
                     }
-                    info.open()
-                }
-                function disableButton () {
-                    fixButton.enabled = false
-                }
+                    function disableButton () {
+                        fixButton.enabled = false
+                    }
 
-                Popup {
-                    id: confirmDialog
-                    focus: true
-                    modal: true
-                    closePolicy: Popup.NoAutoClose
-                    x: (window.width - width)/2 - imageArea.width
-                    y: window.height/6
-                    Column {
-                        spacing: 10
-                        Label { text: qsTr("<b>Confirm</b>") }
-                        Label { text: qsTr("Are you sure?") }
-                        Row {
+                    Popup {
+                        id: confirmDialog
+                        focus: true
+                        modal: true
+                        closePolicy: Popup.NoAutoClose
+                        x: (window.width - width)/2 - imageArea.width
+                        y: window.height/6
+                        Column {
                             spacing: 10
-                            Button {
-                                id: okButton
-                                text: qsTr("OK")
-                                onClicked: {
-                                    fixButton.setFlickable()
-                                    fixButton.disableButton()
-                                    confirmDialog.close()
+                            Label { text: qsTr("<b>Confirm</b>") }
+                            Label { text: qsTr("Are you sure?") }
+                            Row {
+                                spacing: 10
+                                Button {
+                                    id: okButton
+                                    text: qsTr("OK")
+                                    onClicked: {
+                                        fixButton.setFlickable()
+                                        fixButton.disableButton()
+                                        confirmDialog.close()
+                                    }
+                                }
+                                Button {
+                                    text: qsTr("Cancel")
+                                    onClicked: confirmDialog.close()
                                 }
                             }
+                        }
+
+                    }
+                    Popup {
+                        id: info
+                        x: (window.width - width)/2 - imageArea.width
+                        y: (window.height - height) / 6
+                        modal: true
+                        focus: true
+                        Column {
+                            spacing: 10
+                            Label { text: qsTr("<b>Information</b>") }
+                            Label { text: qsTr("Positions of electrodes are fixed.") }
                             Button {
-                                text: qsTr("Cancel")
-                                onClicked: confirmDialog.close()
+                                text: qsTr("OK")
+                                onClicked: {
+                                    info.close()
+                                }
                             }
                         }
                     }
-
                 }
-                InfoPopup {
-                    id: info
-                    msg: "Positions of electrodes are fixed."
-                    x: (window.width - width)/2 - imageArea.width
+                Switch {
+                    id: zoomSwitch
+                    text: qsTr("Image zoom")
+                    checked: false
+                    onCheckedChanged: { zoomEnabled = checked ? true : false }
                 }
-            }
-            Switch {
-                id: zoomSwitch
-                text: qsTr("Image zoom")
-                checked: false
-                onCheckedChanged: { zoomEnabled = checked ? true : false }
-            }
-            Repeater {
-                id: elecRep
-                model: electrodes
-                Electrode {
-                    columnCount: columns
-                    rowCount: rows
-                    draggable: true
+                Repeater {
+                    id: elecRep
+                    model: electrodes
+                    Electrode {
+                        columnCount: model.columns
+                        rowCount: model.rows
+                    }
                 }
             }
         }
+        ScrollIndicator.vertical: ScrollIndicator { }
+        ScrollIndicator.horizontal: ScrollIndicator { }
     }
 }
+
 
 
 
