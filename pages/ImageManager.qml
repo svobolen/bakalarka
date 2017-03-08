@@ -119,15 +119,9 @@ Pane {
                 anchors {bottom: parent.bottom; horizontalCenter: parent.horizontalCenter}
                 onClicked: {
                     var checkedImages = getCheckedImages()
-//                    info.msg = "You chose " + checkedImages.length + " image(s)."
-//                    info.open()
                     console.log("User chose " + checkedImages.length + " image(s): " + checkedImages.toString())
                     window.images = checkedImages
-                    listView.currentIndex = 3   //index v listview
-                    titleLabel.text = "Electrode manager"
-                    stackView.push( "qrc:/pages/ElectrodeManager.qml", {"name": "Electrode Manager"} )
-                    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+                    window.changePage("Electrode Manager", "qrc:/pages/ElectrodeManager.qml", 2)
                 }
             }
             Button {
@@ -158,7 +152,6 @@ Pane {
                     } else {
                         console.log("There have to be at least 2 pages in swipe.")
                     }
-
                 }
             }
         }

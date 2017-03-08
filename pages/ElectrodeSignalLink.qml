@@ -6,7 +6,7 @@ import QtQuick.Controls 2.0
 
 SplitView {
     property var name
-    property var electrodes
+    property var electrodes: window.electrodes
 
     Flickable {
         contentHeight: destItem.height
@@ -50,7 +50,6 @@ SplitView {
                 onClicked: {
 //                    window.changePage("Electrode Placement", "qrc:/pages/ElectrodePlacement.qml", 4)
                     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                    window.electrodes = electrodes
                     listView.currentIndex = 4   //index v listview
                     titleLabel.text = "Electrode Placement"
                     stackView.push( "qrc:/pages/ElectrodePlacement.qml", {"electrodes": electrodes, "images": window.images,"name": "Electrode Placement"} )

@@ -10,7 +10,6 @@ ApplicationWindow {
     visible: true
     title: "My Application"
     property var images
-    property var electrodes
 
     header: ToolBar {
 

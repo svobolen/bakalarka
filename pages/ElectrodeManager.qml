@@ -152,11 +152,9 @@ Page {
             if (chosenElecs.count === 0) {
                 console.log("User did not choose any electrode.")
             } else {
-                //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                 listView.currentIndex = 3   //index v listview
                 titleLabel.text = "Link Signal with Electrode"
                 stackView.push( "qrc:/pages/ElectrodeSignalLink.qml", {"electrodes": chosenElecs, "name": "Link Signal with Electrode"} )
-                //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             }
         }
     }
@@ -229,6 +227,7 @@ Page {
 
     function getChosenElectrodes() {
         console.log("User chose following electrodes: ")
+        chosenElectrodesList.clear()
 
         for (var i = 0; i < stripRep.count; i++) {
             if (stripRep.itemAt(i).count !== 0) {
