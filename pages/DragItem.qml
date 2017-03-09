@@ -4,7 +4,7 @@ Item {
     id: root
     property int size: 20
     property string waveName: "X"
-//    property var data
+    property var signalData
     width: size; height: size
 
     MouseArea {
@@ -13,7 +13,18 @@ Item {
         anchors.centerIn: parent
         drag.target: tile
 
-        onReleased: parent = (tile.Drag.target !== null) ? tile.Drag.target : root
+        onReleased: {
+            parent = (tile.Drag.target === null || tile.Drag.target.alreadyContainsDrag) ?  root : tile.Drag.target
+
+            if (tile.Drag.target !== null) {
+                tile.Drag.target.alreadyContainsDrag = true
+            }
+        }
+        onPressed: {
+            if (parent !== root) {
+                parent.alreadyContainsDrag = false
+            }
+        }
 
         Rectangle {
             id: tile
@@ -36,10 +47,17 @@ Item {
 
             states: State {
                 when: mouseArea.drag.active
-                ParentChange { target: tile; parent: root }
-                AnchorChanges { target: tile; anchors.verticalCenter: undefined; anchors.horizontalCenter: undefined }
+                ParentChange {
+                    target: tile
+                    parent: root
+                }
+                //aby se to pohybovalo s mysi
+                AnchorChanges {
+                    target: tile
+                    anchors.verticalCenter: undefined
+                    anchors.horizontalCenter: undefined
+                }
             }
-
         }
     }
 }

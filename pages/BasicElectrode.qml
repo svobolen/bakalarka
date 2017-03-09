@@ -27,6 +27,7 @@ Item {
                         DropArea {
                             id: dragTarget
                             property alias dropProxy: dragTarget
+                            property bool alreadyContainsDrag: false
                             width: size; height: size
 
                             Rectangle {
@@ -34,19 +35,25 @@ Item {
                                 opacity: 0.8
                                 width: size; height: size; radius: size/2
                                 border.color: "grey"
-                                property var signal
+                                property var signalData
                                 states: [
                                     State {
-                                        when: dragTarget.containsDrag
+                                        when: dragTarget.containsDrag && dragTarget.alreadyContainsDrag === false
                                         PropertyChanges {
                                             target: dropRectangle
                                             color: "green"
-//                                            signal:
+                                        }
+                                    },
+                                    State {
+                                        when: dragTarget.containsDrag && dragTarget.alreadyContainsDrag === true
+                                        PropertyChanges {
+                                            target: dropRectangle
+                                            color: "red"
                                         }
                                     }
                                 ]
                                 Text {
-                                    text: columnCount*(rowCount-row.getIndex()) + (modelData+1)
+                                    text: columnCount * ( rowCount - row.getIndex() ) + ( modelData + 1 )
                                     anchors.fill: parent
                                     horizontalAlignment:Text.AlignHCenter
                                     verticalAlignment: Text.AlignVCenter
