@@ -15,7 +15,6 @@ Item {
 
         onReleased: {
             parent = (tile.Drag.target === null || tile.Drag.target.alreadyContainsDrag) ?  root : tile.Drag.target
-
             if (tile.Drag.target !== null) {
                 tile.Drag.target.alreadyContainsDrag = true
             }

@@ -5,7 +5,7 @@ Item {
     id: root
     property int columnCount
     property int rowCount
-    property int highestZ: 0            //posledni obrazek je nahore
+    property int indexNumber
     property bool draggable: true
     property bool flickable: true
     property int size: 20
@@ -20,9 +20,13 @@ Item {
             columnCount: root.columnCount
             rowCount: root.rowCount
             size: root.size
+            droppingEnabled: false
+
             Behavior on scale { NumberAnimation { duration: 200 } }
             Behavior on x { NumberAnimation { duration: 200 } }
             Behavior on y { NumberAnimation { duration: 200 } }
+
+            Drag.active: mouseArea.drag.active
 
             PinchArea {
                 enabled: draggable
@@ -47,18 +51,21 @@ Item {
                         electrode.scale = pinch.previousScale
                         electrode.x = pinch.previousCenter.x - electrode.width / 2
                         electrode.y = pinch.previousCenter.y - electrode.height / 2
-                        electrode.z = zRestore
-                        --root.highestZ
+//                        electrode.z = zRestore
+//                        --root.highestZ
                     }
                 }
                 MouseArea {
                     id: mouseArea
                     hoverEnabled: true
                     anchors.fill: parent
+                    anchors.centerIn: parent
                     drag.target: electrode
                     scrollGestureEnabled: false  // 2-finger-flick gesture should pass through to the Flickable
                     onPressAndHold: { menu.open() }
-                    onPressed: { electrode.z = ++root.highestZ }
+                    onPressed: {
+                        electrodePlacement.currListIndex = root.indexNumber
+                    }
                     onWheel: {
                         if (draggable) {
                             if (wheel.modifiers & Qt.ControlModifier) {
@@ -74,6 +81,13 @@ Item {
                             }
                         }
                     }
+//                    onReleased: {
+//                        console.log(electrode.parent)
+//                        electrode.parent = (electrode.Drag.target === null) ?  electrode.Drag.source : electrode.Drag.target
+//                        console.log(electrode.Drag.target)
+//                        console.log(electrode.parent)
+//                        console.log("")
+//                    }
                 }
             }
 
@@ -97,6 +111,8 @@ Item {
                     }
                 }
             }
+
+
         }
     }
 }

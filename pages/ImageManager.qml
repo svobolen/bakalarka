@@ -4,8 +4,9 @@ import QtQuick.Controls 2.0
 import QtQuick.Dialogs 1.2
 
 Pane {
-    id: pane
+    id: imageManager
     property var name
+    property var images
 
     SwipeView {
         id: swipe

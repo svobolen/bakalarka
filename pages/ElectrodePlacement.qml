@@ -4,7 +4,10 @@ import QtQuick.Controls 1.4
 import QtQuick.Controls 2.0
 
 SplitView {
+    id: electrodePlacement
     property var name
+    property int zHighest: 1
+    property int currListIndex: -1
     property bool zoomEnabled: false
     property var images: []
     property ListModel electrodes: ListModel {
@@ -14,7 +17,7 @@ SplitView {
     }
     orientation: Qt.Horizontal
 
-    Item {
+    DropArea {
         id: imageArea
         width: 3/4*parent.width
         height: parent.height
@@ -60,9 +63,10 @@ SplitView {
         delegate: Electrode {
             columnCount: columns
             rowCount: rows
+            indexNumber: index
         }
+
         ScrollIndicator.vertical: ScrollIndicator { }
-        ScrollIndicator.horizontal: ScrollIndicator { }
 
         header: Rectangle {
             height: buttonsColumn.height
@@ -154,10 +158,17 @@ SplitView {
             }
         }
         headerPositioning: ListView.OverlayHeader
-
-
     }
+
+    onCurrListIndexChanged: {
+        elecList.currentIndex = currListIndex
+        elecList.currentItem.z = ++zHighest
+    }
+
+
 }
+
+
 
 
 

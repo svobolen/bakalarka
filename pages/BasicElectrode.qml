@@ -6,6 +6,7 @@ Item {
     property int columnCount
     property int rowCount
     property int size: 20
+    property bool droppingEnabled: true
     width: columnCount*size; height: rowCount*size;
 
 
@@ -26,9 +27,9 @@ Item {
 
                         DropArea {
                             id: dragTarget
-                            property alias dropProxy: dragTarget
                             property bool alreadyContainsDrag: false
                             width: size; height: size
+                            enabled: droppingEnabled
 
                             Rectangle {
                                 id: dropRectangle
