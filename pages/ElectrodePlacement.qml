@@ -9,6 +9,8 @@ SplitView {
     property var images: []
     property ListModel electrodes: ListModel {
         ListElement {columns: 5; rows: 2}
+        ListElement {columns: 5; rows: 3}
+        ListElement {columns: 5; rows: 4}
     }
     orientation: Qt.Horizontal
 
@@ -49,31 +51,46 @@ SplitView {
         }
     }
 
-    Flickable {
-        contentHeight: electrodeTab.height
-        contentWidth: electrodeTab.width
+    ListView {
+        id: elecList
+        spacing: 10
         Layout.minimumWidth: 100
+        model: electrodes
 
-        Item {
-            id: electrodeTab
-            height: electrodeColumn.height * 1.1
-            width: electrodeColumn.width * 1.1
+        delegate: Electrode {
+            columnCount: columns
+            rowCount: rows
+        }
+        ScrollIndicator.vertical: ScrollIndicator { }
+        ScrollIndicator.horizontal: ScrollIndicator { }
+
+        header: Rectangle {
+            height: buttonsColumn.height
+            width: parent.width
+            z: 2
+            color: "white"
+
             Column {
-                id: electrodeColumn
+                id: buttonsColumn
                 spacing: 10
                 padding: 5
 
-                Button {
-                    id: exportButton
-                    text: qsTr("Export image")
+                Switch {
+                    id: zoomSwitch
+                    text: qsTr("Image zoom")
+                    checked: false
+                    onCheckedChanged: { zoomEnabled = checked ? true : false }
                 }
                 Button {
                     id: fixButton
                     text: qsTr("Fix positions")
-                    onClicked: { confirmDialog.open() }
-                    function setFlickable () {
-                        for (var i = 0; i < elecRep.count; i++) {
-                            elecRep.itemAt(i).flickable = false
+                    onClicked: {
+                        confirmDialog.open()
+                    }
+                    function setFlickable (flickable) {
+                        for (var i = 0; i < elecList.count; i++) {
+                            elecList.currentIndex = i
+                            elecList.currentItem.flickable = flickable
                         }
                         info.open()
                     }
@@ -98,7 +115,7 @@ SplitView {
                                     id: okButton
                                     text: qsTr("OK")
                                     onClicked: {
-                                        fixButton.setFlickable()
+                                        fixButton.setFlickable(false)
                                         fixButton.disableButton()
                                         confirmDialog.close()
                                     }
@@ -130,24 +147,15 @@ SplitView {
                         }
                     }
                 }
-                Switch {
-                    id: zoomSwitch
-                    text: qsTr("Image zoom")
-                    checked: false
-                    onCheckedChanged: { zoomEnabled = checked ? true : false }
-                }
-                Repeater {
-                    id: elecRep
-                    model: electrodes
-                    Electrode {
-                        columnCount: model.columns
-                        rowCount: model.rows
-                    }
+                Button {
+                    id: exportButton
+                    text: qsTr("Export image")
                 }
             }
         }
-        ScrollIndicator.vertical: ScrollIndicator { }
-        ScrollIndicator.horizontal: ScrollIndicator { }
+        headerPositioning: ListView.OverlayHeader
+
+
     }
 }
 
