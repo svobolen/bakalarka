@@ -134,7 +134,7 @@ Page {
 
     Button {
         id: addButton
-        text: "Add new type of strip or grid"
+        text: qsTr("Add new type of strip or grid")
         x: (parent.width - width) / 2
         anchors.bottom: parent.bottom
         anchors.right: confirmButton.left
@@ -155,6 +155,25 @@ Page {
                 listView.currentIndex = 3   //index v listview
                 titleLabel.text = "Link Signal with Electrode"
                 stackView.push( "qrc:/pages/ElectrodeSignalLink.qml", {"electrodes": chosenElecs, "name": "Link Signal with Electrode"} )
+            }
+        }
+    }
+    Button {
+        id: resetButton
+        text: qsTr("Reset choice")
+        anchors.bottom: parent.bottom
+        anchors.left: confirmButton.right
+        anchors.margins: 15
+        onClicked: resetChoice()
+
+        function resetChoice() {
+            // reset strips choice
+            for (var i = 0; i < stripRep.count; i++) {
+                stripRep.itemAt(i).count = 0
+            }
+            //reset grids choice
+            for (var j = 0; j < gridRep.count; j++) {
+                gridRep.itemAt(j).count = 0
             }
         }
     }
