@@ -8,8 +8,6 @@ Image {
     property bool checkboxVisible: false
     property alias imgChecked: checkbox.checked
     readonly property string plusImgSource: "qrc:/images/plus.png"
-//    property alias manager: ImageManager.imageModel
-
 
     id: brainImage
     source: sourceImg
@@ -17,50 +15,39 @@ Image {
     width: parent.width/2
     height: parent.height/2
 
-    Component {
-        id: fileDialogComponent
-        FileDialog {
-            id: fileDialog
-            title: qsTr("Please choose a file")
-            nameFilters: [ "Image files (*.jpg *.png)", "All files (*)" ]
-            folder: shortcuts.pictures
-            onAccepted: {
-                var path = fileDialog.fileUrl
-                if (fileDialog.checkIfImage(path.toString())) {
-                    fileDialog.addImage(path)
-                } else {
-                    console.log("Chosen file is not an image.")
-                    info.open()
-                }
-            }
-            onRejected: {
-                console.log("Choosing file canceled.")
-            }
-            function checkIfImage(source) {
-                var fileExtension = source.substring(source.length-4,source.length)
-                return ( (fileExtension === (".jpg")) || (fileExtension === ".png") )
-            }
-            function addImage(source) {
-                //add new empty plus image when you add new image
-//                if (brainImage.source == plusImgSource) {
-//                    var component = Qt.createComponent("qrc:/pages/BrainTemplate.qml");
-//                    var elec = component.createObject(parent.parent, {sourceImg: plusImgSource});
-//                }
-                brainImage.source = source
-                sourceImg = source
-                checkbox.visible = true
-                checkbox.checked = false
-                console.log("You chose: " + source)
-            }
-            Component.onCompleted: {
-                console.log("Opening file dialog.")
-                fileDialog.open()
+    FileDialog {
+        id: fileDialog
+        title: qsTr("Please choose a file")
+        nameFilters: [ "Image files (*.jpg *.png)", "All files (*)" ]
+        folder: shortcuts.pictures
+        onAccepted: {
+            var path = fileDialog.fileUrl
+            if (fileDialog.checkIfImage(path.toString())) {
+                fileDialog.addImage(path)
+            } else {
+                console.log("Chosen file is not an image.")
+                info.open()
             }
         }
-    }
-
-    Loader {
-        id: loader
+        onRejected: {
+            console.log("Choosing file canceled.")
+        }
+        function checkIfImage(source) {
+            var fileExtension = source.substring(source.length-4,source.length).toLowerCase()
+            return ( (fileExtension === (".jpg")) || (fileExtension === ".png") )
+        }
+        function addImage(source) {
+            //add new empty plus image when you add new image
+            //                if (brainImage.source == plusImgSource) {
+            //                    var component = Qt.createComponent("qrc:/pages/BrainTemplate.qml");
+            //                    var elec = component.createObject(parent.parent, {sourceImg: plusImgSource});
+            //                }
+            brainImage.source = source
+            sourceImg = source
+            checkbox.visible = true
+            checkbox.checked = false
+            console.log("You chose: " + source)
+        }
     }
 
     Popup {
@@ -81,8 +68,6 @@ Image {
             }
         }
     }
-
-
     CheckBox {
         id: checkbox
         visible: checkboxVisible
@@ -115,10 +100,9 @@ Image {
         anchors.fill: parent
         onClicked: {
             if (brainImage.source == plusImgSource) {
-                loader.sourceComponent = fileDialogComponent
-      //          fileDialog.open()
+                fileDialog.open()
             } else {
-                checkbox.checked = (checkbox.checked) ? false : true
+                checkbox.checked = !checkbox.checked
             }
         }
         onPressAndHold: menu.open()
@@ -129,8 +113,7 @@ Image {
 
             MenuItem {
                 text: qsTr("Change")
-                onClicked: loader.sourceComponent = fileDialogComponent
-//                onClicked: fileDialog.open()
+                onClicked: fileDialog.open()
             }
             MenuItem {
                 text: qsTr("Delete")

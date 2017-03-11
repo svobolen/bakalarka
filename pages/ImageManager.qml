@@ -116,13 +116,28 @@ Pane {
             Button {
                 id: confirmButton
                 text: qsTr("OK")
+                x: parent.width / 2 - (width + anchors.margins + resetButton.width) / 2
                 anchors {margins: 10; bottomMargin: 50 }
-                anchors {bottom: parent.bottom; horizontalCenter: parent.horizontalCenter}
+                anchors {bottom: parent.bottom; right: resetButton.left}
                 onClicked: {
                     var checkedImages = getCheckedImages()
                     console.log("User chose " + checkedImages.length + " image(s): " + checkedImages.toString())
                     window.images = checkedImages
                     window.changePage("Electrode Manager", "qrc:/pages/ElectrodeManager.qml", 2)
+                }
+            }
+            Button {
+                id: resetButton
+                text: qsTr("Reset")
+                anchors {margins: 10; bottomMargin: 50 }
+                anchors {bottom: parent.bottom; left: confirmButton.right}
+                onClicked: { resetChoice() }
+                function resetChoice() {
+                    for (var k = 0; k < swipe.count; k++) {
+                        for (var i = 0; i < swipe.itemAt(k).images.count; i++) {
+                            swipe.itemAt(k).images.itemAt(i).imgChecked = false
+                        }
+                    }
                 }
             }
             Button {
