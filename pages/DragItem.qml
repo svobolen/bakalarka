@@ -17,11 +17,15 @@ Item {
             parent = (tile.Drag.target === null || tile.Drag.target.alreadyContainsDrag) ?  root : tile.Drag.target
             if (tile.Drag.target !== null) {
                 tile.Drag.target.alreadyContainsDrag = true
+                tile.Drag.target.name = waveName
+                tile.Drag.target.waveName = waveName
             }
         }
         onPressed: {
             if (parent !== root) {
                 parent.alreadyContainsDrag = false
+                parent.name = parent.defaultName
+                parent.waveName = ""
             }
         }
 

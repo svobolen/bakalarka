@@ -5,10 +5,11 @@ Item {
     id: root
     property int columnCount
     property int rowCount
+    property int size: 20
     property int indexNumber
     property bool draggable: true
     property bool flickable: true
-    property int size: 20
+    property ListModel linksList
     width: columnCount*size; height: rowCount*size;
 
     Flickable {
@@ -21,6 +22,7 @@ Item {
             rowCount: root.rowCount
             size: root.size
             droppingEnabled: false
+            links: linksList
 
             Behavior on scale { NumberAnimation { duration: 200 } }
             Behavior on x { NumberAnimation { duration: 200 } }
@@ -37,22 +39,17 @@ Item {
                 pinch.minimumScale: 0.5
                 pinch.maximumScale: 10
                 pinch.dragAxis: Pinch.XAndYAxis
-                property real zRestore: 0
                 onSmartZoom: {
                     if (pinch.scale > 0) {
                         electrode.rotation = 0;
                         electrode.scale = Math.min(root.width, root.height) / Math.max(electrode.sourceSize.width, electrode.sourceSize.height) * 0.85
                         electrode.x = flick.contentX + (flick.width - electrode.width) / 2
                         electrode.y = flick.contentY + (flick.height - electrode.height) / 2
-                        zRestore = electrode.z
-                        electrode.z = ++root.highestZ;
                     } else {
                         electrode.rotation = pinch.previousAngle
                         electrode.scale = pinch.previousScale
                         electrode.x = pinch.previousCenter.x - electrode.width / 2
                         electrode.y = pinch.previousCenter.y - electrode.height / 2
-//                        electrode.z = zRestore
-//                        --root.highestZ
                     }
                 }
                 MouseArea {
@@ -81,13 +78,13 @@ Item {
                             }
                         }
                     }
-//                    onReleased: {
+                    onReleased: {
 //                        console.log(electrode.parent)
 //                        electrode.parent = (electrode.Drag.target === null) ?  electrode.Drag.source : electrode.Drag.target
 //                        console.log(electrode.Drag.target)
 //                        console.log(electrode.parent)
 //                        console.log("")
-//                    }
+                    }
                 }
             }
 

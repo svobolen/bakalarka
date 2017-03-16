@@ -12,9 +12,9 @@ SplitView {
     property bool zoomEnabled: false
     property var images: []
     property ListModel electrodes: ListModel {
-        ListElement {columns: 5; rows: 2}
-        ListElement {columns: 5; rows: 3}
-        ListElement {columns: 5; rows: 4}
+//        ListElement {columns: 5; rows: 2}
+//        ListElement {columns: 5; rows: 3}
+//        ListElement {columns: 5; rows: 4}
     }
     orientation: Qt.Horizontal
 
@@ -69,6 +69,7 @@ SplitView {
             columnCount: columns
             rowCount: rows
             indexNumber: index
+            linksList: links
         }
 
         ScrollIndicator.vertical: ScrollIndicator { }
@@ -152,6 +153,16 @@ SplitView {
                     //                        }
                     //                    }
                 }
+                ComboBox {
+                    model: ["Wave name", "Index"]
+                    currentIndex: 1
+                    displayText: "Display: " + currentText
+
+                    onCurrentIndexChanged: {
+
+                    }
+                }
+
                 Button {
                     id: exportButton
                     text: qsTr("Export image")
@@ -168,10 +179,13 @@ SplitView {
                         var filePath = ( fileUrl + "").replace('file:///', '');
                         electrodePlacement.grabToImage(function(result) {
                             if (!result.saveToFile(filePath)){
-                                console.error('Unknown error saving to',filePath);
+                                console.error('Unknown error saving to ',filePath);
                             }
                         });
                         console.log("Screenshot has been saved to " + filePath)
+                    }
+                    onRejected: {
+                        console.log("Saving file canceled.")
                     }
                 }
             }

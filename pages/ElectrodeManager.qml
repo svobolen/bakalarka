@@ -241,7 +241,7 @@ Page {
 
     ListModel {
         id: chosenElectrodesList
-        //        ListElement { count: 0; columns: 0; rows: 0}
+        //        ListElement { columns: 0; rows: 0}
     }
 
     function getChosenElectrodes() {
@@ -250,18 +250,16 @@ Page {
 
         for (var i = 0; i < stripRep.count; i++) {
             if (stripRep.itemAt(i).count !== 0) {
-                //                chosenElectrodesList.append({ count: stripRep.itemAt(i).count, columns: stripRep.itemAt(i).stripColumns, rows: 1 })
                 for (var k = 0; k < stripRep.itemAt(i).count; k++) {
-                    chosenElectrodesList.append({ count: stripRep.itemAt(i).count, columns: stripRep.itemAt(i).stripColumns, rows: 1 })
+                    chosenElectrodesList.append({ columns: stripRep.itemAt(i).stripColumns, rows: 1 })
                 }
                 console.log(stripRep.itemAt(i).count + "x strip 1x" + stripRep.itemAt(i).stripColumns)
             }
         }
         for (var j = 0; j < gridRep.count; j++) {
             if (gridRep.itemAt(j).count !== 0) {
-                //             chosenElectrodesList.append({ count: gridRep.itemAt(j).count, columns: gridRep.itemAt(j).gridColumns, rows: gridRep.itemAt(j).gridRows })
                 for (var l = 0; l < gridRep.itemAt(j).count; l++) {
-                    chosenElectrodesList.append({ count: gridRep.itemAt(j).count, columns: gridRep.itemAt(j).gridColumns, rows: gridRep.itemAt(j).gridRows })
+                    chosenElectrodesList.append({ columns: gridRep.itemAt(j).gridColumns, rows: gridRep.itemAt(j).gridRows })
                 }
                 console.log(gridRep.itemAt(j).count + "x grid " + gridRep.itemAt(j).gridRows + "x" + gridRep.itemAt(j).gridColumns)
             }

@@ -6,7 +6,7 @@ import QtQuick.Controls 2.0
 
 SplitView {
     property var name
-    property var electrodes: window.electrodes
+    property var electrodes
 
     Flickable {
         contentHeight: destItem.height
@@ -25,8 +25,10 @@ SplitView {
                 width: parent.parent.width
 
                 Repeater {
+                    id: elecRep
                     model: electrodes
                     Row {
+                        property alias bElectrode: bElectrode
                         spacing: 10
                         Label {
                             text: rows + "x" + columns
@@ -34,9 +36,11 @@ SplitView {
                             anchors.verticalCenter: parent.verticalCenter
                         }
                         BasicElectrode {
+                            id: bElectrode
                             size: 40
                             columnCount: columns
                             rowCount: rows
+                            droppingEnabled: true
                         }
                     }
                 }
@@ -48,12 +52,10 @@ SplitView {
                 anchors.top: destination.bottom
                 anchors.margins: 20
                 onClicked: {
-//                    window.changePage("Electrode Placement", "qrc:/pages/ElectrodePlacement.qml", 4)
-                    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                    fillLinkedElectrodesList()
                     listView.currentIndex = 4   //index v listview
                     titleLabel.text = "Electrode Placement"
-                    stackView.push( "qrc:/pages/ElectrodePlacement.qml", {"electrodes": electrodes, "images": window.images,"name": "Electrode Placement"} )
-                    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                    stackView.push( "qrc:/pages/ElectrodePlacement.qml", {"electrodes": linkedElectrodesList, "images": window.images,"name": "Electrode Placement"} )
                 }
             }
         }
@@ -85,4 +87,21 @@ SplitView {
         }
         ScrollIndicator.vertical: ScrollIndicator { }
     }
+
+    ListModel {
+        id: linkedElectrodesList
+        //        ListElement { electrode: bElectrode}
+    }
+
+    function fillLinkedElectrodesList() {
+        linkedElectrodesList.clear()
+
+        for (var i = 0; i < elecRep.count; i++) {
+            linkedElectrodesList.append({ rows: elecRep.itemAt(i).bElectrode.rowCount, columns: elecRep.itemAt(i).bElectrode.columnCount, links: elecRep.itemAt(i).bElectrode.links})
+        }
+        return linkedElectrodesList
+    }
+
+
+
 }

@@ -6,7 +6,12 @@ Item {
     property int columnCount
     property int rowCount
     property int size: 20
-    property bool droppingEnabled: true
+    property bool droppingEnabled: false
+    property ListModel links: ListModel {
+        //        ListElement {electrodeNumber: 1; wave: "C3"}
+        //        ListElement {electrodeNumber: 3; wave: "C4"}
+        //        ListElement {electrodeNumber: 4; wave: "F3"}
+    }
     width: columnCount*size; height: rowCount*size;
 
 
@@ -28,6 +33,12 @@ Item {
                         DropArea {
                             id: dragTarget
                             property bool alreadyContainsDrag: false
+                            property var signalData
+                            property string waveName: ""
+                            readonly property int defaultName: columnCount * ( rowCount - row.getIndex() ) + ( modelData + 1 )
+                            property alias name: electrodeText.text
+                            property int index
+
                             width: size; height: size
                             enabled: droppingEnabled
 
@@ -36,7 +47,7 @@ Item {
                                 opacity: 0.8
                                 width: size; height: size; radius: size/2
                                 border.color: "grey"
-                                property var signalData
+
                                 states: [
                                     State {
                                         when: dragTarget.containsDrag && dragTarget.alreadyContainsDrag === false
@@ -54,10 +65,31 @@ Item {
                                     }
                                 ]
                                 Text {
-                                    text: columnCount * ( rowCount - row.getIndex() ) + ( modelData + 1 )
+                                    id: electrodeText
+                                    text: dragTarget.defaultName
                                     anchors.fill: parent
                                     horizontalAlignment:Text.AlignHCenter
                                     verticalAlignment: Text.AlignVCenter
+                                }
+                            }
+
+                            onWaveNameChanged: {
+                                if (waveName === "") {
+                                    links.remove(index - 1)
+                                } else {
+                                    links.append( { electrodeNumber: defaultName, wave: name})
+                                    index = links.count
+                                }
+                            }
+
+                            Component.onCompleted: {
+                                if (links !== null) {
+                                    for (var i = 0; i < links.count; i++) {
+                                        if (links.get(i).electrodeNumber === defaultName) {
+                                            name = links.get(i).wave
+                                            waveName = links.get(i).wave
+                                        }
+                                    }
                                 }
                             }
                         }
