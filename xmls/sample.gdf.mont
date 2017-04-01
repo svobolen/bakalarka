@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<document>
+	<montageTable>
+		<montage name="Montage 0" save="false">
+			<trackTable>
+				<track label="Fp1             " color="#000000" amplitude="-7.4567425020475807e-06" hidden="false">
+					<code>out = in(0);</code>
+				</track>
+				<track label="Fp2             " color="#000000" amplitude="-7.4567425020475807e-06" hidden="false">
+					<code>out = in(1);</code>
+				</track>
+				<track label="F3              " color="#000000" amplitude="-7.4567425020475807e-06" hidden="false">
+					<code>out = in(2);</code>
+				</track>
+				<track label="F4              " color="#000000" amplitude="-7.4567425020475807e-06" hidden="false">
+					<code>out = in(3);</code>
+				</track>
+				<track label="C3              " color="#000000" amplitude="-7.4567425020475807e-06" hidden="false">
+					<code>out = in(4);</code>
+				</track>
+				<track label="C4              " color="#000000" amplitude="-7.4567425020475807e-06" hidden="false">
+					<code>out = in(5);</code>
+				</track>
+				<track label="P3              " color="#000000" amplitude="-7.4567425020475807e-06" hidden="false">
+					<code>out = in(6);</code>
+				</track>
+				<track label="P4              " color="#000000" amplitude="-2.1297202260098094e-05" hidden="false">
+					<code>out = in(7);</code>
+				</track>
+				<track label="O1              " color="#000000" amplitude="-7.4567425020475807e-06" hidden="false">
+					<code>out = in(8);</code>
+				</track>
+				<track label="O2              " color="#000000" amplitude="-7.4567425020475807e-06" hidden="false">
+					<code>out = in(9);</code>
+				</track>
+				<track label="Fp1             " color="#000000" amplitude="-7.4567425020475807e-06" hidden="false">
+					<code>out = in(0);</code>
+				</track>
+			</trackTable>
+			<eventTable>
+				<event label="Event 0" type="0" position="582" duration="260" channel="0">
+					<description></description>
+				</event>
+				<event label="Event 1" type="0" position="502" duration="329" channel="6">
+					<description></description>
+				</event>
+				<event label="Event 2" type="0" position="1081" duration="161" channel="-1">
+					<description></description>
+				</event>
+				<event label="Event 3" type="1" position="6185" duration="445" channel="4">
+					<description></description>
+				</event>
+			</eventTable>
+		</montage>
+	</montageTable>
+	<eventTypeTable>
+		<eventType id="0" name="Type 0" opacity="0.25" color="#ff0000" hidden="false" />
+		<eventType id="1" name="Type 1" opacity="0.25" color="#ff0000" hidden="false" />
+		<eventType id="2" name="Type 2" opacity="0.25" color="#ff0000" hidden="false" />
+		<eventType id="3" name="Type 3" opacity="0.25" color="#ff0000" hidden="false" />
+	</eventTypeTable>
+</document>

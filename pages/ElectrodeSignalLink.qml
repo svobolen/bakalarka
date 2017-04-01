@@ -13,16 +13,17 @@ SplitView {
         contentWidth: destItem.width
         width: 4/5 * parent.width
         Layout.minimumWidth: 1/2 * parent.width + confirmButton.width / 2
+        boundsBehavior: Flickable.OvershootBounds
 
         Item {
             id: destItem
             width: destination.width * 1.1
             height: destination.height * 1.1
+
             Column {
                 id: destination
                 spacing: 10
                 padding: 10
-                width: parent.parent.width
 
                 Repeater {
                     id: elecRep
@@ -48,7 +49,7 @@ SplitView {
             Button {
                 id: confirmButton
                 text: qsTr("Confirm")
-                x: (window.width - width)/2 - destItem.width
+                x: (window.width - width)/2
                 anchors.top: destination.bottom
                 anchors.margins: 20
                 onClicked: {
@@ -60,30 +61,40 @@ SplitView {
             }
         }
         ScrollIndicator.vertical: ScrollIndicator { }
+        ScrollIndicator.horizontal: ScrollIndicator { }
     }
     Flickable {
-        contentHeight: source.height
-        contentWidth: source.width
+        contentHeight: sourceItem.height
+        contentWidth: sourceItem.width
         Layout.minimumWidth: 50
         Layout.maximumWidth: 1/2 * parent.width - confirmButton.width / 2
+        boundsBehavior: Flickable.OvershootBounds
 
-        Item {
-            id: sourceItem
-            width: source.width * 1.1
-            height: source.height * 1.1
-            Column {
-                id: source
-                width: 50
-                Layout.minimumWidth: 50
-                spacing: 10
-                padding: 10
-                Repeater {
-                    model: 12
-                    DragItem {
-                        size: 40
+        Rectangle {
+            color: "white"
+            width: parent.parent.width
+            height: sourceItem.height
+
+            Item {
+                id: sourceItem
+                width: source.width * 1.1
+                height: source.height * 1.1
+                Column {
+                    id: source
+                    width: 50
+                    Layout.minimumWidth: 50
+                    spacing: 10
+                    padding: 10
+                    Repeater {
+                        model: xmlParser.trackModel
+                        DragItem {
+                            size: 40
+                            waveName: label.replace(/\s+/g, '')
+                        }
                     }
                 }
             }
+            XmlParser {id: xmlParser }
         }
         ScrollIndicator.vertical: ScrollIndicator { }
     }

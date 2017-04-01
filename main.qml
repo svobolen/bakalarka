@@ -1,6 +1,7 @@
 import QtQuick 2.7
 import QtQuick.Layouts 1.3
 import QtQuick.Controls 2.0
+import QtQuick.Dialogs 1.2
 
 
 ApplicationWindow {
@@ -51,6 +52,14 @@ ApplicationWindow {
                     x: parent.width - width
                     transformOrigin: Menu.TopRight
 
+                    MenuItem {
+                        text: qsTr("Save session...")
+                        onTriggered: saveDialog.open()
+                    }
+                    MenuItem {
+                        text: qsTr("Open session...")
+                        onTriggered: openDialog.open()
+                    }
                     MenuItem {
                         text: qsTr("About")
                         onTriggered: aboutDialog.open()
@@ -137,7 +146,6 @@ ApplicationWindow {
         height: aboutColumn.implicitHeight + topPadding + bottomPadding
 
         Column {
-
             id: aboutColumn
             spacing: 20
 
@@ -145,27 +153,51 @@ ApplicationWindow {
                 text: qsTr("About")
                 font.bold: true
             }
-
             Label {
                 width: aboutDialog.availableWidth
                 text: "Author: Lenka Svobodová "
                 wrapMode: Label.Wrap
                 font.pixelSize: 12
             }
-
             Label {
                 width: aboutDialog.availableWidth
                 text: "Year: 2017"
                 wrapMode: Label.Wrap
                 font.pixelSize: 12
             }
-
             Button {
                 id: okButton
                 text: "Ok"
                 onClicked: aboutDialog.close()
             }
         }
+    }
+
+    FileDialog {
+        id: saveDialog
+        folder: shortcuts.documents
+        selectExisting: false
+        nameFilters: [ "All files (*)" ]
+        onAccepted: {
+
+        }
+        onRejected: console.log("Saving file canceled.")
+    }
+
+    FileDialog {
+        id: openDialog
+        nameFilters: [ "", "All files (*)" ]
+        folder: shortcuts.documents
+        onAccepted: {
+//            var path = fileDialog.fileUrl
+//            if (fileDialog.checkIfImage(path.toString())) {
+//                fileDialog.addImage(path)
+//            } else {
+//                console.log("Chosen file is not an image.")
+//                info.open()
+//            }
+        }
+        onRejected: console.log("Choosing file canceled.")
     }
 
     function changePage(title, source, index) {

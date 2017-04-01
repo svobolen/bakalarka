@@ -17,9 +17,8 @@ Image {
 
     FileDialog {
         id: fileDialog
-        title: qsTr("Please choose a file")
         nameFilters: [ "Image files (*.jpg *.png)", "All files (*)" ]
-        folder: shortcuts.pictures
+        folder: shortcuts.documents
         onAccepted: {
             var path = fileDialog.fileUrl
             if (fileDialog.checkIfImage(path.toString())) {

@@ -24,5 +24,7 @@
         <file>pages/ImageManager.qml</file>
         <file>pages/DragItem.qml</file>
         <file>pages/BasicElectrode.qml</file>
+        <file>pages/XmlParser.qml</file>
+        <file>xmls/sample.gdf.mont</file>
     </qresource>
 </RCC>

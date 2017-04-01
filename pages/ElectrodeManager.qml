@@ -22,6 +22,7 @@ Page {
         Flickable {
             contentHeight: stripTab.height
             contentWidth: stripTab.width
+            boundsBehavior: Flickable.OvershootBounds
 
             Item {
                 id: stripTab
@@ -77,6 +78,7 @@ Page {
         Flickable {
             contentHeight: gridTab.height
             contentWidth: gridTab.width
+            boundsBehavior: Flickable.OvershootBounds
 
             Item {
                 id: gridTab
@@ -102,7 +104,7 @@ Page {
                     Repeater {
                         id: gridRep
                         model: gridModel
-                        Row {
+                        delegate: Row {
                             spacing: 10
                             property alias count: gridSpin.value
                             property alias gridRows: grid.rowCount
@@ -165,7 +167,6 @@ Page {
         anchors.left: confirmButton.right
         anchors.margins: 15
         onClicked: resetChoice()
-
         function resetChoice() {
             // reset strips choice
             for (var i = 0; i < stripRep.count; i++) {
@@ -218,7 +219,6 @@ Page {
             }
 
         }
-
         function addElectrode(columnCount, rowCount) {
 
             //for strips rows = 1

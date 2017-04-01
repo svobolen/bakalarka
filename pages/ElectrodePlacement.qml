@@ -3,6 +3,7 @@ import QtQuick.Layouts 1.3
 import QtQuick.Controls 1.4
 import QtQuick.Controls 2.0
 import QtQuick.Dialogs 1.2
+import QtQuick.XmlListModel 2.0
 
 SplitView {
     id: electrodePlacement
@@ -12,9 +13,9 @@ SplitView {
     property bool zoomEnabled: false
     property var images: []
     property ListModel electrodes: ListModel {
-//        ListElement {columns: 5; rows: 2}
-//        ListElement {columns: 5; rows: 3}
-//        ListElement {columns: 5; rows: 4}
+        //        ListElement {columns: 5; rows: 2}
+        //        ListElement {columns: 5; rows: 3}
+        //        ListElement {columns: 5; rows: 4}
     }
     orientation: Qt.Horizontal
 
@@ -26,6 +27,8 @@ SplitView {
         Rectangle {
             anchors.fill: parent
             color: "white"
+
+            XmlParser {id: xml}
 
             Grid {
                 id: imagesGrid
@@ -63,13 +66,49 @@ SplitView {
         id: elecList
         spacing: 10
         Layout.minimumWidth: 100
+        boundsBehavior: Flickable.OvershootBounds
         model: electrodes
 
-        delegate: Electrode {
-            columnCount: columns
-            rowCount: rows
-            indexNumber: index
-            linksList: links
+        delegate: Row {
+            id: elRow
+            property alias elec: electrode
+            padding: 5
+            spacing: 5
+
+            Label {
+                text: rows + "x" + columns
+                anchors.verticalCenter: parent.verticalCenter
+            }
+
+            Button {
+                id: plusButton
+                text: "+"
+                background: Rectangle {
+                    implicitWidth: 20
+                    implicitHeight: 20
+                    color: plusButton.down ? "#d6d6d6" : "#f6f6f6"
+                    border.color: "black"
+                    border.width: 1
+                    radius: 20
+                }
+
+                anchors.verticalCenter: parent.verticalCenter
+                onClicked: {
+                    //                    var newObject = Qt.createQmlObject('import QtQuick 2.7; Electrode {id: ahoj; columnCount: columns; rowCount: rows; linksList: links}', elecList);
+                    //electrodes.append(electrodes.get(index))
+                    electrodes.insert(index + 1, { columns: columns, rows: rows, links: links})
+                }
+            }
+
+            Electrode {
+                id: electrode
+                columnCount: columns
+                rowCount: rows
+                indexNumber: index
+                linksList: links
+//                draggable: true
+            }
+
         }
 
         ScrollIndicator.vertical: ScrollIndicator { }
@@ -96,12 +135,13 @@ SplitView {
                     id: fixButton
                     text: qsTr("Fix positions")
                     checked: false
-                    onCheckedChanged: { setFlickable(!checked) }
+                    onCheckedChanged: { setDraggable(!checked) }
 
-                    function setFlickable (flickable) {
+                    function setDraggable(boolDrag) {
                         for (var i = 0; i < elecList.count; i++) {
                             elecList.currentIndex = i
-                            elecList.currentItem.flickable = flickable
+                            elecList.currentItem.elec.draggable = boolDrag
+                            elecList.currentItem.elec.mouseArea.drag.target = null
                         }
                     }
 
@@ -154,15 +194,25 @@ SplitView {
                     //                    }
                 }
                 ComboBox {
-                    model: ["Wave name", "Index"]
-                    currentIndex: 1
+                    model: ["indexes", "wave names", "indexes + waves"]
+                    currentIndex: 2
                     displayText: "Display: " + currentText
 
                     onCurrentIndexChanged: {
+                        for (var i = 0; i < elecList.count; i++) {
+                            elecList.currentIndex = i
+                            elecList.currentItem.elec.basicE.changeNames(currentIndex)
+                        }
+                        elecList.currentIndex = 0
+                    }
+                }
+                Button {
+                    id: resetButton
+                    text: qsTr("Reset positions")
+                    onClicked: {
 
                     }
                 }
-
                 Button {
                     id: exportButton
                     text: qsTr("Export image")
@@ -172,7 +222,7 @@ SplitView {
                 }
                 FileDialog {
                     id: fileDialog
-                    folder: shortcuts.pictures
+                    folder: shortcuts.documents
                     selectExisting: false
                     nameFilters: [ "JPEG Image (*.jpg)", "PNG Image (*.png)", "Bitmap Image (*.bmp)", "All files (*)" ]
                     onAccepted: {
@@ -197,6 +247,10 @@ SplitView {
         elecList.currentIndex = currListIndex
         elecList.currentItem.z = ++zHighest
     }
+
+
+
+
 
 
 }

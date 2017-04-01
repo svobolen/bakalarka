@@ -7,6 +7,7 @@ Item {
     property int rowCount
     property int size: 20
     property bool droppingEnabled: false
+    property var color: "white"
     property ListModel links: ListModel {
         //        ListElement {electrodeNumber: 1; wave: "C3"}
         //        ListElement {electrodeNumber: 3; wave: "C4"}
@@ -24,20 +25,23 @@ Item {
         Column {
             id: column
             Repeater {
+                id: rowRep
                 model: rowCount
                 Row {
                     id: row
+                    property alias colRep: columnRep
                     Repeater {
+                        id: columnRep
                         model: columnCount
 
                         DropArea {
-                            id: dragTarget
-                            property bool alreadyContainsDrag: false
-                            property var signalData
-                            property string waveName: ""
+                            id: dropArea
                             readonly property int defaultName: columnCount * ( rowCount - row.getIndex() ) + ( modelData + 1 )
                             property alias name: electrodeText.text
+                            property string waveName: ""
                             property int index
+                            property bool alreadyContainsDrag: false
+                            property var signalData
 
                             width: size; height: size
                             enabled: droppingEnabled
@@ -50,14 +54,14 @@ Item {
 
                                 states: [
                                     State {
-                                        when: dragTarget.containsDrag && dragTarget.alreadyContainsDrag === false
+                                        when: dropArea.containsDrag && dropArea.alreadyContainsDrag === false
                                         PropertyChanges {
                                             target: dropRectangle
                                             color: "green"
                                         }
                                     },
                                     State {
-                                        when: dragTarget.containsDrag && dragTarget.alreadyContainsDrag === true
+                                        when: dropArea.containsDrag && dropArea.alreadyContainsDrag === true
                                         PropertyChanges {
                                             target: dropRectangle
                                             color: "red"
@@ -66,7 +70,7 @@ Item {
                                 ]
                                 Text {
                                     id: electrodeText
-                                    text: dragTarget.defaultName
+                                    text: dropArea.defaultName
                                     anchors.fill: parent
                                     horizontalAlignment:Text.AlignHCenter
                                     verticalAlignment: Text.AlignVCenter
@@ -88,6 +92,7 @@ Item {
                                         if (links.get(i).electrodeNumber === defaultName) {
                                             name = links.get(i).wave
                                             waveName = links.get(i).wave
+                                            electrodeText.font.bold = true
                                         }
                                     }
                                 }
@@ -95,14 +100,36 @@ Item {
                         }
                     }
                     Rectangle {
+                        id: tail
                         opacity: 0.8
                         width: size + 5; height: 6; radius: 3
                         y: size / 2 - height / 2
                         border.color: "grey"
+                        color: root.color
                     }
                     function getIndex() {
                         return index + 1
                     }
+                }
+            }
+        }
+    }
+
+    function changeNames(a) {
+        for (var k = 0; k < rowCount; k++) {
+            for (var l = 0; l < columnCount; l++) {
+                switch (a) {
+                case 0: // only default name
+                    rowRep.itemAt(k).colRep.itemAt(l).name = rowRep.itemAt(k).colRep.itemAt(l).defaultName;
+                    break;
+                case 1: // only wave names (non-linked are empty)
+                    rowRep.itemAt(k).colRep.itemAt(l).name = rowRep.itemAt(k).colRep.itemAt(l).waveName
+                    break;
+                default: // wave names, non-linked default name
+                    rowRep.itemAt(k).colRep.itemAt(l).name =
+                            (rowRep.itemAt(k).colRep.itemAt(l).waveName === "") ?
+                                rowRep.itemAt(k).colRep.itemAt(l).defaultName : rowRep.itemAt(k).colRep.itemAt(l).waveName
+                    break;
                 }
             }
         }

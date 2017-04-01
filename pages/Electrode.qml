@@ -1,6 +1,7 @@
 import QtQuick 2.6
 import QtQuick.Controls 2.0
 
+
 Item {
     id: root
     property int columnCount
@@ -9,8 +10,10 @@ Item {
     property int indexNumber
     property bool draggable: true
     property bool flickable: true
+    property alias basicE: electrode
     property ListModel linksList
     width: columnCount*size; height: rowCount*size;
+    Rectangle {id: sourceBorder; anchors.fill: parent; border.color: "black"; radius: size/2 }
 
     Flickable {
         id: flick
@@ -59,10 +62,9 @@ Item {
                     anchors.centerIn: parent
                     drag.target: electrode
                     scrollGestureEnabled: false  // 2-finger-flick gesture should pass through to the Flickable
-                    onPressAndHold: { menu.open() }
-                    onPressed: {
-                        electrodePlacement.currListIndex = root.indexNumber
-                    }
+                    property int ahoj: 0
+                    onPressAndHold: menu.open()
+                    onPressed: { electrodePlacement.currListIndex = root.indexNumber }
                     onWheel: {
                         if (draggable) {
                             if (wheel.modifiers & Qt.ControlModifier) {
@@ -79,37 +81,96 @@ Item {
                         }
                     }
                     onReleased: {
-//                        console.log(electrode.parent)
-//                        electrode.parent = (electrode.Drag.target === null) ?  electrode.Drag.source : electrode.Drag.target
-//                        console.log(electrode.Drag.target)
-//                        console.log(electrode.parent)
-//                        console.log("")
+
+                        electrode.parent = (electrode.Drag.target === null) ?  root : electrode.Drag.target
+
+                        if(ahoj == 0 && electrode.parent !== root) {
+                            console.log("tady")
+                            electrode.x = electrode.x + electrode.parent.width
+                            electrode.y = electrode.y + root.y + 250
+                            ahoj++
+                        } else if (electrode.parent === root){
+                            electrode.rotation = 0
+                            electrode.scale = 1
+                            electrode.x = 0
+                            electrode.y = 0
+                        }
+                        console.log(electrode.parent)
+                        console.log(electrode.x)
+                        console.log(electrode.y)
+                    }
+                    Menu {
+                        id: menu
+                        x: mouseArea.mouseX
+                        y: mouseArea.mouseY
+                        width: 150
+
+                        MenuItem {
+                            text: qsTr("Fix position")
+                            onTriggered: {
+                                draggable = false
+                                mouseArea.drag.target = null
+                            }
+                        }
+                        MenuItem {
+                            text: qsTr("Change position")
+                            onTriggered: {
+                                draggable = true
+                                mouseArea.drag.target = electrode
+                            }
+                        }
+                        MenuItem {
+                            text: qsTr("Change color...")
+                            onTriggered: colorMenu.open()
+
+                            Menu {
+                                id: colorMenu
+                                x: parent.width
+                                y: 0
+                                width: 150
+                                title: qsTr("Change color...")
+                                closePolicy: Popup.CloseOnPressOutside
+
+                                signal menuClicked(color itemColor)
+                                onMenuClicked: {
+                                    electrode.color = itemColor
+                                    sourceBorder.border.color = itemColor
+                                    menu.close()
+                                }
+
+                                MenuItem {
+                                    Rectangle {anchors.fill: parent; color: "purple"}
+                                    onTriggered: colorMenu.menuClicked("purple")
+                                }
+                                MenuItem {
+                                    Rectangle {anchors.fill: parent; color: "blue"}
+                                    onTriggered: colorMenu.menuClicked("blue")
+                                }
+                                MenuItem {
+                                    Rectangle {anchors.fill: parent; color: "green"}
+                                    onTriggered: colorMenu.menuClicked("green")
+                                }
+                                MenuItem {
+                                    Rectangle {anchors.fill: parent; color: "yellow"}
+                                    onTriggered: colorMenu.menuClicked("yellow")
+                                }
+                                MenuItem {
+                                    Rectangle {anchors.fill: parent; color: "orange"}
+                                    onTriggered: colorMenu.menuClicked("orange")
+                                }
+                                MenuItem {
+                                    Rectangle {anchors.fill: parent; color: "red"}
+                                    onTriggered: colorMenu.menuClicked("red")
+                                }
+                                MenuItem {
+                                    text: "default"
+                                    onTriggered: colorMenu.menuClicked("white")
+                                }
+                            }
+                        }
                     }
                 }
             }
-
-            Menu {
-                id: menu
-                x: mouseArea.mouseX
-                y: mouseArea.mouseY
-
-                MenuItem {
-                    text: qsTr("Fix position")
-                    onClicked: {
-                        draggable = false
-                        mouseArea.drag.target = null
-                    }
-                }
-                MenuItem {
-                    text: qsTr("Change position")
-                    onClicked: {
-                        draggable = true
-                        mouseArea.drag.target = electrode
-                    }
-                }
-            }
-
-
         }
     }
 }
